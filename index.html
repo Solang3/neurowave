@@ -556,6 +556,38 @@
     color: var(--muted);
   }
 
+  .role-block {
+    margin-bottom: 1.25rem;
+    padding-left: 1rem;
+    border-left: 2px solid var(--border);
+  }
+  .role-block:hover { border-left-color: var(--accent); }
+  .role-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.4rem;
+    font-weight: 500;
+  }
+  .role-block p {
+    margin-bottom: 0 !important;
+  }
+
+  .disclaimer-box {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    background: rgba(126,184,247,0.06);
+    border: 1px solid rgba(126,184,247,0.15);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin: 1.5rem 0;
+  }
+  .disclaimer-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
+  .disclaimer-text { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+  .disclaimer-text strong { color: var(--text); font-weight: 500; }
+
   /* FOOTER */
   footer {
     padding: 3rem;
@@ -606,8 +638,8 @@
   <div class="hero-author">
     <div class="author-avatar">D</div>
     <div class="author-info">
-      <div class="author-name">Dr. [Apellido]</div>
-      <div class="author-title">Médico Cirujano · Especialista en neurociencia del sueño</div>
+      <div class="author-name">Dr. Rogelio González</div>
+      <div class="author-title">Cirujano de Cabeza y Cuello · Hospital Militar Central · Argentina</div>
     </div>
   </div>
 
@@ -683,17 +715,29 @@
     <div class="doctor-visual">
       <div class="doctor-card">
         <div class="doctor-avatar-lg">D</div>
-        <div class="doctor-quote">"Tomé clonazepam durante años para descansar. Empecé con Delta binaurales y en 6 semanas lo dejé completamente. Hoy recomiendo este protocolo a mis pacientes."</div>
-        <div class="doctor-name-lg">Dr. [Apellido]</div>
-        <div class="doctor-meta">Médico Cirujano · 25 años de trayectoria</div>
+        <div class="doctor-quote">"Usé clonazepam durante años para poder descansar. Empecé a explorar las ondas binaurales, leí la evidencia disponible, y en pocas semanas pude dejarlo. Comparto esto como mi experiencia personal, no como indicación médica."</div>
+        <div class="doctor-name-lg">Dr. Rogelio González</div>
+        <div class="doctor-meta">Médico Cirujano · Cirugía de Cabeza y Cuello<br>Hospital Militar Central · Argentina</div>
       </div>
       <div class="floating-badge">Médico verificado</div>
     </div>
     <div class="doctor-text">
-      <div class="section-eyebrow">El respaldo científico</div>
-      <h2>No es misticismo.<br>Es <em>neurociencia.</em></h2>
-      <p>Las ondas binaurales funcionan por un fenómeno llamado <em>frequency following response</em>: el cerebro sincroniza su actividad eléctrica con la diferencia entre dos frecuencias levemente distintas, una en cada oído.</p>
-      <p>Existe evidencia publicada en journals como <em>Frontiers in Human Neuroscience</em> y <em>PLOS ONE</em> que documenta efectos medibles en ansiedad, sueño y cognición.</p>
+      <div class="section-eyebrow">Quién está detrás</div>
+      <h2>Una historia real.<br>Una <em>ciencia real.</em></h2>
+
+      <div class="role-block">
+        <div class="role-label">Como usuario</div>
+        <p>El Dr. González usó clonazepam durante años para poder descansar. Fue explorando las ondas binaurales por cuenta propia, leyó la evidencia disponible, y en pocas semanas pudo dejar la medicación. Lo que encontró le cambió la rutina — y quiere compartirlo.</p>
+      </div>
+
+      <div class="role-block">
+        <div class="role-label">Como médico</div>
+        <p>Con 25 años de trayectoria como Cirujano de Cabeza y Cuello en el Hospital Militar Central, el Dr. González revisó la literatura científica publicada sobre ondas binaurales y organizó el contenido de este sitio. No hace indicaciones médicas aquí — comparte lo que la evidencia dice y lo que él mismo experimentó.</p>
+      </div>
+      <div class="disclaimer-box">
+        <div class="disclaimer-icon">⚕</div>
+        <div class="disclaimer-text">Este sitio comparte información científica y una experiencia personal. <strong>No reemplaza la consulta médica.</strong> Si tomás medicación, hablá con tu médico antes de hacer cualquier cambio en tu tratamiento.</div>
+      </div>
       <div class="stat-row">
         <div class="stat-item">
           <div class="stat-num">47+</div>
@@ -717,7 +761,7 @@
   <div class="playlist-inner">
     <div class="section-eyebrow">Playlists curadas</div>
     <h2 class="section-title">Una lista para<br><em>cada necesidad</em></h2>
-    <p class="section-sub">Seleccionadas y aprobadas por el Dr. según evidencia clínica. No algoritmos.</p>
+    <p class="section-sub">Seleccionadas por el Dr. a partir de la evidencia disponible y su experiencia personal. No algoritmos.</p>
 
     <div class="playlist-grid">
       <div class="playlist-card">
@@ -825,8 +869,14 @@
 <!-- FOOTER -->
 <footer>
   <div class="logo">Neuro<span>Wave</span></div>
-  <div class="footer-copy">© 2025 NeuroWave · Ciencia del sonido para tu mente</div>
+  <div class="footer-copy">© 2025 NeuroWave · Información científica y experiencia personal · No reemplaza la consulta médica</div>
 </footer>
+
+<div style="background: var(--surface); border-top: 1px solid var(--border); padding: 1.25rem 3rem; text-align: center;">
+  <p style="font-size: 0.75rem; color: var(--muted); max-width: 700px; margin: 0 auto; line-height: 1.7;">
+    <strong style="color: var(--text);">Aviso legal:</strong> El contenido de este sitio tiene fines informativos y refleja la experiencia personal de su autor. No constituye consejo médico, diagnóstico ni prescripción. Las ondas binaurales son un complemento de bienestar, no un tratamiento médico. Si estás bajo tratamiento farmacológico, consultá a tu médico antes de realizar cualquier modificación. Los efectos pueden variar según cada persona.
+  </p>
+</div>
 
 <script>
   // Animated wave canvas in hero
