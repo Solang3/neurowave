@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NeuroWave — Ciencia del sonido para tu mente</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080c10;
+    --surface: #0e1419;
+    --surface2: #141c24;
+    --border: rgba(255,255,255,0.07);
+    --text: #e8e4da;
+    --muted: #6b7580;
+    --accent: #a8f0c8;
+    --accent2: #7eb8f7;
+    --accent3: #f0c8a8;
+    --delta: #c4a8f0;
+    --theta: #a8f0c8;
+    --alpha: #7eb8f7;
+    --beta: #f0e8a8;
+    --gamma: #f0a8a8;
+    --serif: 'DM Serif Display', serif;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-weight: 300;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NOISE TEXTURE */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 3rem;
+    background: rgba(8,12,16,0.8);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+  .logo span { color: var(--accent); }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  .nav-cta {
+    background: var(--accent);
+    color: #080c10;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 100px;
+    font-family: var(--sans);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .nav-cta:hover { opacity: 0.85; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 8rem 2rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Animated wave background */
+  .wave-canvas {
+    position: absolute;
+    inset: 0;
+    opacity: 0.15;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid rgba(168,240,200,0.3);
+    border-radius: 100px;
+    padding: 0.4rem 1rem;
+    font-size: 0.8rem;
+    color: var(--accent);
+    margin-bottom: 2rem;
+    animation: fadeUp 0.8s ease both;
+  }
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s ease infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  .hero h1 {
+    font-family: var(--serif);
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    max-width: 540px;
+    color: var(--muted);
+    font-size: 1.05rem;
+    margin-bottom: 2.5rem;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  .hero-author {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2.5rem;
+    animation: fadeUp 0.8s 0.25s ease both;
+  }
+  .author-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1a2a3a, #2a3a4a);
+    border: 2px solid rgba(168,240,200,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--serif);
+    font-size: 1rem;
+    color: var(--accent);
+  }
+  .author-info { text-align: left; }
+  .author-name { font-size: 0.9rem; font-weight: 500; }
+  .author-title { font-size: 0.78rem; color: var(--muted); }
+
+  .hero-ctas {
+    display: flex;
+    gap: 1rem;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #080c10;
+    border: none;
+    padding: 0.85rem 2rem;
+    border-radius: 100px;
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-primary:hover { transform: translateY(-2px); opacity: 0.9; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 0.85rem 2rem;
+    border-radius: 100px;
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.2); transform: translateY(-2px); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* WAVES SECTION */
+  .waves-section {
+    padding: 6rem 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-eyebrow {
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+  .section-title em { font-style: italic; color: var(--accent); }
+
+  .section-sub {
+    color: var(--muted);
+    max-width: 480px;
+    margin-bottom: 4rem;
+    font-size: 1rem;
+  }
+
+  /* Wave cards */
+  .waves-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  .wave-card {
+    background: var(--surface);
+    padding: 2rem 1.5rem;
+    cursor: pointer;
+    transition: background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .wave-card:hover { background: var(--surface2); }
+
+  .wave-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .wave-card.delta::before { background: var(--delta); }
+  .wave-card.theta::before { background: var(--theta); }
+  .wave-card.alpha::before { background: var(--alpha); }
+  .wave-card.beta::before  { background: var(--beta); }
+  .wave-card.gamma::before { background: var(--gamma); }
+
+  .wave-freq {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+  .wave-card.delta .wave-freq { color: var(--delta); }
+  .wave-card.theta .wave-freq { color: var(--theta); }
+  .wave-card.alpha .wave-freq { color: var(--alpha); }
+  .wave-card.beta  .wave-freq { color: var(--beta); }
+  .wave-card.gamma .wave-freq { color: var(--gamma); }
+
+  .wave-name {
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .wave-effect {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-bottom: 1.25rem;
+  }
+
+  .wave-vis {
+    height: 40px;
+    margin-bottom: 1.25rem;
+  }
+
+  .wave-tag {
+    display: inline-block;
+    border-radius: 100px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+  }
+  .wave-card.delta .wave-tag { background: rgba(196,168,240,0.1); color: var(--delta); }
+  .wave-card.theta .wave-tag { background: rgba(168,240,200,0.1); color: var(--theta); }
+  .wave-card.alpha .wave-tag { background: rgba(126,184,247,0.1); color: var(--alpha); }
+  .wave-card.beta  .wave-tag { background: rgba(240,232,168,0.1); color: var(--beta); }
+  .wave-card.gamma .wave-tag { background: rgba(240,168,168,0.1); color: var(--gamma); }
+
+  /* DOCTOR SECTION */
+  .doctor-section {
+    padding: 6rem 3rem;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .doctor-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+  .doctor-visual {
+    position: relative;
+  }
+  .doctor-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .doctor-card::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(168,240,200,0.08) 0%, transparent 70%);
+  }
+  .doctor-avatar-lg {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1a3a2a, #2a4a3a);
+    border: 2px solid rgba(168,240,200,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--serif);
+    font-size: 1.8rem;
+    color: var(--accent);
+    margin-bottom: 1.25rem;
+  }
+  .doctor-quote {
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    line-height: 1.5;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    font-style: italic;
+  }
+  .doctor-meta { font-size: 0.82rem; color: var(--muted); }
+  .doctor-name-lg { font-size: 0.9rem; font-weight: 500; color: var(--text); margin-bottom: 0.2rem; }
+  .floating-badge {
+    position: absolute;
+    bottom: -1.5rem; right: 2rem;
+    background: var(--accent);
+    color: #080c10;
+    border-radius: 100px;
+    padding: 0.5rem 1.25rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+  }
+
+  .doctor-text h2 {
+    font-family: var(--serif);
+    font-size: 2.8rem;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+  }
+  .doctor-text h2 em { font-style: italic; color: var(--accent); }
+  .doctor-text p {
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+  .stat-row {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+  .stat-item { }
+  .stat-num {
+    font-family: var(--serif);
+    font-size: 2rem;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.25rem; }
+
+  /* PRICING */
+  .pricing-section {
+    padding: 7rem 3rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 3.5rem;
+    align-items: center;
+  }
+  .pricing-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 2.5rem 2rem;
+    text-align: left;
+    transition: border-color 0.2s;
+  }
+  .pricing-card:hover { border-color: rgba(255,255,255,0.15); }
+  .pricing-card.featured {
+    background: var(--surface2);
+    border-color: rgba(168,240,200,0.25);
+    padding: 3rem 2rem;
+  }
+  .pricing-plan { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+  .pricing-card.featured .pricing-plan { color: var(--accent); }
+  .pricing-price {
+    font-family: var(--serif);
+    font-size: 3.5rem;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+  .pricing-period { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem; }
+  .pricing-divider { height: 1px; background: var(--border); margin-bottom: 1.5rem; }
+  .pricing-features { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+  .pricing-features li {
+    font-size: 0.875rem;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .pricing-features li::before {
+    content: '';
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--border);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .pricing-card.featured .pricing-features li { color: var(--text); }
+  .pricing-features li.yes::before { background: rgba(168,240,200,0.15); box-shadow: inset 0 0 0 1px rgba(168,240,200,0.3); }
+  .pricing-cta {
+    width: 100%;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    border-radius: 100px;
+    padding: 0.85rem;
+    font-family: var(--sans);
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin-top: 2rem;
+    transition: all 0.2s;
+  }
+  .pricing-cta:hover { border-color: rgba(255,255,255,0.3); }
+  .pricing-card.featured .pricing-cta {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #080c10;
+    font-weight: 500;
+  }
+  .pricing-card.featured .pricing-cta:hover { opacity: 0.9; }
+  .pricing-badge {
+    display: inline-block;
+    background: rgba(168,240,200,0.1);
+    color: var(--accent);
+    border-radius: 100px;
+    padding: 0.3rem 0.9rem;
+    font-size: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(168,240,200,0.2);
+  }
+
+  /* PLAYLISTS */
+  .playlist-section {
+    padding: 6rem 3rem;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+  }
+  .playlist-inner { max-width: 1100px; margin: 0 auto; }
+  .playlist-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 3rem;
+  }
+  .playlist-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .playlist-card:hover { border-color: rgba(255,255,255,0.12); transform: translateY(-2px); }
+  .playlist-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+  }
+  .playlist-need { font-size: 0.8rem; color: var(--muted); }
+  .playlist-title { font-size: 1rem; font-weight: 500; }
+  .playlist-wave { font-size: 0.78rem; }
+  .playlist-count { font-size: 0.75rem; color: var(--muted); margin-top: auto; }
+  .lock-badge {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    font-size: 0.72rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 0.2rem 0.6rem;
+    color: var(--muted);
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 3rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  footer .logo { font-size: 1.1rem; }
+  .footer-copy { font-size: 0.8rem; color: var(--muted); }
+
+  /* SCROLL ANIMATION */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Neuro<span>Wave</span></div>
+  <ul class="nav-links">
+    <li><a href="#ondas">Las ondas</a></li>
+    <li><a href="#ciencia">Ciencia</a></li>
+    <li><a href="#playlists">Playlists</a></li>
+    <li><a href="#precios">Precios</a></li>
+  </ul>
+  <button class="nav-cta">Empezar gratis</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas class="wave-canvas" id="waveCanvas"></canvas>
+
+  <div class="hero-badge">Respaldado por medicina clínica</div>
+
+  <h1>Tu mente<br>en la <em>frecuencia</em><br>correcta</h1>
+
+  <p class="hero-sub">Ondas binaurales curadas por un médico cirujano. Bibliografía científica real. Sin misticismo.</p>
+
+  <div class="hero-author">
+    <div class="author-avatar">D</div>
+    <div class="author-info">
+      <div class="author-name">Dr. [Apellido]</div>
+      <div class="author-title">Médico Cirujano · Especialista en neurociencia del sueño</div>
+    </div>
+  </div>
+
+  <div class="hero-ctas">
+    <button class="btn-primary">Escuchar ahora — gratis</button>
+    <button class="btn-ghost">Ver la ciencia</button>
+  </div>
+</section>
+
+<!-- WAVES -->
+<section class="waves-section" id="ondas">
+  <div class="section-eyebrow">Las frecuencias</div>
+  <h2 class="section-title">Cinco ondas,<br><em>cinco estados</em></h2>
+  <p class="section-sub">Cada frecuencia activa un estado cerebral distinto, documentado en la literatura científica internacional.</p>
+
+  <div class="waves-grid">
+    <!-- Delta -->
+    <div class="wave-card delta reveal">
+      <div class="wave-freq">0.5 – 4 Hz</div>
+      <div class="wave-name">Delta</div>
+      <svg class="wave-vis" viewBox="0 0 120 40" preserveAspectRatio="none">
+        <path d="M0,20 C20,4 40,36 60,20 C80,4 100,36 120,20" fill="none" stroke="#c4a8f0" stroke-width="1.5" opacity="0.7"/>
+      </svg>
+      <div class="wave-effect">Sueño profundo y regeneración celular. La onda más lenta y poderosa.</div>
+      <span class="wave-tag">Sueño reparador</span>
+    </div>
+    <!-- Theta -->
+    <div class="wave-card theta reveal">
+      <div class="wave-freq">4 – 8 Hz</div>
+      <div class="wave-name">Theta</div>
+      <svg class="wave-vis" viewBox="0 0 120 40" preserveAspectRatio="none">
+        <path d="M0,20 C15,5 25,35 40,20 C55,5 65,35 80,20 C95,5 105,35 120,20" fill="none" stroke="#a8f0c8" stroke-width="1.5" opacity="0.7"/>
+      </svg>
+      <div class="wave-effect">Meditación profunda, creatividad y reducción de ansiedad.</div>
+      <span class="wave-tag">Ansiedad & meditación</span>
+    </div>
+    <!-- Alpha -->
+    <div class="wave-card alpha reveal">
+      <div class="wave-freq">8 – 13 Hz</div>
+      <div class="wave-name">Alpha</div>
+      <svg class="wave-vis" viewBox="0 0 120 40" preserveAspectRatio="none">
+        <path d="M0,20 C10,8 20,32 30,20 C40,8 50,32 60,20 C70,8 80,32 90,20 C100,8 110,32 120,20" fill="none" stroke="#7eb8f7" stroke-width="1.5" opacity="0.7"/>
+      </svg>
+      <div class="wave-effect">Estado de calma alerta. Puente entre el estrés y la meditación.</div>
+      <span class="wave-tag">Relajación activa</span>
+    </div>
+    <!-- Beta -->
+    <div class="wave-card beta reveal">
+      <div class="wave-freq">13 – 30 Hz</div>
+      <div class="wave-name">Beta</div>
+      <svg class="wave-vis" viewBox="0 0 120 40" preserveAspectRatio="none">
+        <path d="M0,20 C7,10 12,30 18,20 C24,10 30,30 36,20 C42,10 48,30 54,20 C60,10 66,30 72,20 C78,10 84,30 90,20 C96,10 102,30 108,20 C114,10 120,30 120,20" fill="none" stroke="#f0e8a8" stroke-width="1.5" opacity="0.7"/>
+      </svg>
+      <div class="wave-effect">Foco, concentración y pensamiento analítico activo.</div>
+      <span class="wave-tag">Foco & productividad</span>
+    </div>
+    <!-- Gamma -->
+    <div class="wave-card gamma reveal">
+      <div class="wave-freq">30 – 100 Hz</div>
+      <div class="wave-name">Gamma</div>
+      <svg class="wave-vis" viewBox="0 0 120 40" preserveAspectRatio="none">
+        <path d="M0,20 C4,12 7,28 10,20 C13,12 16,28 20,20 C23,12 26,28 30,20 C33,12 36,28 40,20 C43,12 46,28 50,20 C53,12 56,28 60,20 C63,12 66,28 70,20 C73,12 76,28 80,20 C83,12 86,28 90,20 C93,12 96,28 100,20 C103,12 106,28 110,20 C113,12 116,28 120,20" fill="none" stroke="#f0a8a8" stroke-width="1.5" opacity="0.7"/>
+      </svg>
+      <div class="wave-effect">Mayor procesamiento cognitivo, aprendizaje y conciencia expandida.</div>
+      <span class="wave-tag">Cognición avanzada</span>
+    </div>
+  </div>
+</section>
+
+<!-- DOCTOR -->
+<section class="doctor-section" id="ciencia">
+  <div class="doctor-inner">
+    <div class="doctor-visual">
+      <div class="doctor-card">
+        <div class="doctor-avatar-lg">D</div>
+        <div class="doctor-quote">"Tomé clonazepam durante años para descansar. Empecé con Delta binaurales y en 6 semanas lo dejé completamente. Hoy recomiendo este protocolo a mis pacientes."</div>
+        <div class="doctor-name-lg">Dr. [Apellido]</div>
+        <div class="doctor-meta">Médico Cirujano · 25 años de trayectoria</div>
+      </div>
+      <div class="floating-badge">Médico verificado</div>
+    </div>
+    <div class="doctor-text">
+      <div class="section-eyebrow">El respaldo científico</div>
+      <h2>No es misticismo.<br>Es <em>neurociencia.</em></h2>
+      <p>Las ondas binaurales funcionan por un fenómeno llamado <em>frequency following response</em>: el cerebro sincroniza su actividad eléctrica con la diferencia entre dos frecuencias levemente distintas, una en cada oído.</p>
+      <p>Existe evidencia publicada en journals como <em>Frontiers in Human Neuroscience</em> y <em>PLOS ONE</em> que documenta efectos medibles en ansiedad, sueño y cognición.</p>
+      <div class="stat-row">
+        <div class="stat-item">
+          <div class="stat-num">47+</div>
+          <div class="stat-label">Estudios citados</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">5</div>
+          <div class="stat-label">Tipos de ondas</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">25a</div>
+          <div class="stat-label">Trayectoria médica</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLAYLISTS -->
+<section class="playlist-section" id="playlists">
+  <div class="playlist-inner">
+    <div class="section-eyebrow">Playlists curadas</div>
+    <h2 class="section-title">Una lista para<br><em>cada necesidad</em></h2>
+    <p class="section-sub">Seleccionadas y aprobadas por el Dr. según evidencia clínica. No algoritmos.</p>
+
+    <div class="playlist-grid">
+      <div class="playlist-card">
+        <div class="playlist-icon" style="background: rgba(196,168,240,0.1);">🌙</div>
+        <div class="playlist-need">Para dormir</div>
+        <div class="playlist-title">Sueño profundo · Delta</div>
+        <div class="playlist-wave" style="color: var(--delta)">0.5 – 4 Hz · 8 tracks · 60 min</div>
+        <div class="playlist-count">Gratis · 3 tracks disponibles</div>
+      </div>
+      <div class="playlist-card">
+        <div class="playlist-icon" style="background: rgba(168,240,200,0.1);">🧘</div>
+        <div class="playlist-need">Para la ansiedad</div>
+        <div class="playlist-title">Calma profunda · Theta</div>
+        <div class="playlist-wave" style="color: var(--theta)">4 – 8 Hz · 6 tracks · 45 min</div>
+        <div class="playlist-count">Gratis · 2 tracks disponibles</div>
+      </div>
+      <div class="playlist-card">
+        <div class="playlist-icon" style="background: rgba(126,184,247,0.1);">📚</div>
+        <div class="playlist-need">Para estudiar</div>
+        <div class="playlist-title">Foco sin estrés · Alpha</div>
+        <div class="playlist-wave" style="color: var(--alpha)">8 – 13 Hz · 10 tracks · 90 min</div>
+        <div class="playlist-count"><span class="lock-badge">🔒 Pro</span></div>
+      </div>
+      <div class="playlist-card">
+        <div class="playlist-icon" style="background: rgba(240,232,168,0.1);">⚡</div>
+        <div class="playlist-need">Para trabajar</div>
+        <div class="playlist-title">Deep work · Beta</div>
+        <div class="playlist-wave" style="color: var(--beta)">13 – 30 Hz · 8 tracks · 80 min</div>
+        <div class="playlist-count"><span class="lock-badge">🔒 Pro</span></div>
+      </div>
+      <div class="playlist-card">
+        <div class="playlist-icon" style="background: rgba(168,240,200,0.1);">🌿</div>
+        <div class="playlist-need">Para meditar</div>
+        <div class="playlist-title">Meditación guiada · Theta</div>
+        <div class="playlist-wave" style="color: var(--theta)">4 – 8 Hz · 5 tracks · 50 min</div>
+        <div class="playlist-count"><span class="lock-badge">🔒 Pro</span></div>
+      </div>
+      <div class="playlist-card">
+        <div class="playlist-icon" style="background: rgba(240,168,168,0.1);">🧠</div>
+        <div class="playlist-need">Para aprender</div>
+        <div class="playlist-title">Máximo rendimiento · Gamma</div>
+        <div class="playlist-wave" style="color: var(--gamma)">30 – 100 Hz · 6 tracks · 55 min</div>
+        <div class="playlist-count"><span class="lock-badge">🔒 Pro</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="precios">
+  <div class="section-eyebrow">Planes</div>
+  <h2 class="section-title" style="text-align:center">Simple y <em>transparente</em></h2>
+  <p class="section-sub" style="margin: 0 auto 0; text-align:center">Sin trucos. Sin publicidad. Solo ciencia del sonido.</p>
+
+  <div class="pricing-grid">
+    <!-- Free -->
+    <div class="pricing-card">
+      <div class="pricing-plan">Gratis</div>
+      <div class="pricing-price">$0</div>
+      <div class="pricing-period">para siempre</div>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li class="yes">3 playlists de muestra</li>
+        <li class="yes">Explicación de las 5 ondas</li>
+        <li class="yes">Artículos del blog</li>
+        <li>Biblioteca completa</li>
+        <li>Protocolos personalizados</li>
+      </ul>
+      <button class="pricing-cta">Empezar gratis</button>
+    </div>
+    <!-- Pro -->
+    <div class="pricing-card featured">
+      <div class="pricing-badge">Más popular</div>
+      <div class="pricing-plan">Pro mensual</div>
+      <div class="pricing-price">$9</div>
+      <div class="pricing-period">por mes, cancelás cuando querés</div>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li class="yes">Todo lo gratuito</li>
+        <li class="yes">Biblioteca completa de playlists</li>
+        <li class="yes">Protocolos del Dr. por necesidad</li>
+        <li class="yes">Bibliografía científica completa</li>
+        <li class="yes">Novedades y nuevas ondas</li>
+      </ul>
+      <button class="pricing-cta">Suscribirse a Pro</button>
+    </div>
+    <!-- Annual -->
+    <div class="pricing-card">
+      <div class="pricing-plan">Pro anual</div>
+      <div class="pricing-price">$79</div>
+      <div class="pricing-period">por año · ahorrás 34%</div>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li class="yes">Todo lo de Pro</li>
+        <li class="yes">Acceso anticipado a contenido</li>
+        <li class="yes">PDF de bibliografía completa</li>
+        <li class="yes">Soporte prioritario</li>
+        <li>Consulta personalizada con el Dr.</li>
+      </ul>
+      <button class="pricing-cta">Suscribirse anual</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">Neuro<span>Wave</span></div>
+  <div class="footer-copy">© 2025 NeuroWave · Ciencia del sonido para tu mente</div>
+</footer>
+
+<script>
+  // Animated wave canvas in hero
+  const canvas = document.getElementById('waveCanvas');
+  const ctx = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const waves = [
+    { freq: 0.3, amp: 60, speed: 0.3, color: '#c4a8f0', y: 0.35 },
+    { freq: 0.5, amp: 45, speed: 0.5, color: '#a8f0c8', y: 0.45 },
+    { freq: 0.8, amp: 35, speed: 0.7, color: '#7eb8f7', y: 0.55 },
+    { freq: 1.2, amp: 25, speed: 0.9, color: '#f0e8a8', y: 0.62 },
+    { freq: 2.0, amp: 18, speed: 1.2, color: '#f0a8a8', y: 0.70 },
+  ];
+
+  let t = 0;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    waves.forEach(w => {
+      ctx.beginPath();
+      ctx.strokeStyle = w.color;
+      ctx.lineWidth = 1;
+      ctx.globalAlpha = 0.5;
+      for (let x = 0; x <= canvas.width; x += 2) {
+        const y = canvas.height * w.y + Math.sin(x * w.freq * 0.01 + t * w.speed) * w.amp;
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    });
+    ctx.globalAlpha = 1;
+    t += 0.02;
+    requestAnimationFrame(draw);
+  }
+  draw();
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
