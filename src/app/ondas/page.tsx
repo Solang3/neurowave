@@ -193,7 +193,7 @@ export default function WavePage({ params }: { params: { id: string } }) {
           {next ? (
             <Link
               href={`/ondas/${next.id}`}
-              className="flex items-center gap-3 group text-right"
+              className="flex items-center gap-3 group text-right asd"
             >
               <div>
                 <p className="text-xs text-muted">Siguiente</p>
