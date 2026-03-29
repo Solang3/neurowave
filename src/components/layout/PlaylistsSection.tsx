@@ -6,7 +6,7 @@ const R2_PUBLIC = 'https://pub-78c976d8802a412ca89533a0734f5054.r2.dev'
 
 const WAVE_GROUPS = [
   {
-    wave: 'Delta', freq: '0.5–4 Hz', color: '#c4a8f0',
+    wave: 'Delta', freq: '0.5–4 Hz', color: '#c4a8f0', binauralHz: 2,
     bg: 'rgba(196,168,240,0.08)', emoji: '🌙', useCase: 'Sueño profundo',
     tracks: [
       { id: 'delta-nature', genre: 'Nature', emoji: '🌿', path: 'delta/nature/Delta-nature-001-binaural.mp3' },
@@ -15,7 +15,7 @@ const WAVE_GROUPS = [
     ],
   },
   {
-    wave: 'Theta', freq: '4–8 Hz', color: '#a8f0c8',
+    wave: 'Theta', freq: '4–8 Hz', color: '#a8f0c8', binauralHz: 6,
     bg: 'rgba(168,240,200,0.08)', emoji: '🧘', useCase: 'Meditación y ansiedad',
     tracks: [
       { id: 'theta-nature', genre: 'Nature', emoji: '🌿', path: 'theta/nature/Theta-nature-001-binaural.mp3' },
@@ -24,7 +24,7 @@ const WAVE_GROUPS = [
     ],
   },
   {
-    wave: 'Alpha', freq: '8–13 Hz', color: '#7eb8f7',
+    wave: 'Alpha', freq: '8–13 Hz', color: '#7eb8f7', binauralHz: 10,
     bg: 'rgba(126,184,247,0.08)', emoji: '🌊', useCase: 'Relajación activa',
     tracks: [
       { id: 'alpha-nature', genre: 'Nature', emoji: '🌿', path: 'alpha/nature/Alpha-nature-001-binaural.mp3' },
@@ -33,7 +33,7 @@ const WAVE_GROUPS = [
     ],
   },
   {
-    wave: 'Beta', freq: '13–30 Hz', color: '#f0e8a8',
+    wave: 'Beta', freq: '13–30 Hz', color: '#f0e8a8', binauralHz: 15,
     bg: 'rgba(240,232,168,0.08)', emoji: '⚡', useCase: 'Foco y trabajo',
     tracks: [
       { id: 'beta-nature', genre: 'Nature', emoji: '🌿', path: 'beta/nature/Beta-nature-001-binaural.mp3' },
@@ -42,7 +42,7 @@ const WAVE_GROUPS = [
     ],
   },
   {
-    wave: 'Gamma', freq: '30–100 Hz', color: '#f0a8a8',
+    wave: 'Gamma', freq: '30–100 Hz', color: '#f0a8a8', binauralHz: 40,
     bg: 'rgba(240,168,168,0.08)', emoji: '🧠', useCase: 'Alto rendimiento',
     tracks: [
       { id: 'gamma-nature', genre: 'Nature', emoji: '🌿', path: 'gamma/nature/Gamma-nature-001-binaural.mp3' },
@@ -144,7 +144,7 @@ export default function PlaylistsSection() {
 
         {/* Info de la onda */}
         <p className="text-xs text-muted mb-4">
-          {currentGroup.useCase} · {currentGroup.freq}
+          {currentGroup.useCase} · {currentGroup.binauralHz} Hz binaural
         </p>
 
         {/* Tracks */}
@@ -171,7 +171,7 @@ export default function PlaylistsSection() {
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-sm">{currentGroup.wave} · {track.genre}</p>
                     <p className="text-xs mt-0.5" style={{ color: currentGroup.color }}>
-                      {currentGroup.freq} · muestra 20s
+                      {currentGroup.wave} · {currentGroup.binauralHz} Hz binaural · muestra 20s
                     </p>
                     <div className="mt-2 h-0.5 bg-white/10 rounded-full overflow-hidden">
                       <div

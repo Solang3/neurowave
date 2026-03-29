@@ -6,6 +6,7 @@ const WAVE_GROUPS = [
   {
     wave: 'Delta',
     freq: '0.5–4 Hz',
+    binauralHz: 2,
     color: '#c4a8f0',
     bg: 'rgba(196,168,240,0.08)',
     emoji: '🌙',
@@ -19,6 +20,7 @@ const WAVE_GROUPS = [
   {
     wave: 'Theta',
     freq: '4–8 Hz',
+    binauralHz: 6,
     color: '#a8f0c8',
     bg: 'rgba(168,240,200,0.08)',
     emoji: '🧘',
@@ -32,6 +34,7 @@ const WAVE_GROUPS = [
   {
     wave: 'Alpha',
     freq: '8–13 Hz',
+    binauralHz: 10,
     color: '#7eb8f7',
     bg: 'rgba(126,184,247,0.08)',
     emoji: '🌊',
@@ -45,6 +48,7 @@ const WAVE_GROUPS = [
   {
     wave: 'Beta',
     freq: '13–30 Hz',
+    binauralHz: 15,
     color: '#f0e8a8',
     bg: 'rgba(240,232,168,0.08)',
     emoji: '⚡',
@@ -58,6 +62,7 @@ const WAVE_GROUPS = [
   {
     wave: 'Gamma',
     freq: '30–100 Hz',
+    binauralHz: 40,
     color: '#f0a8a8',
     bg: 'rgba(240,168,168,0.08)',
     emoji: '🧠',
@@ -188,7 +193,7 @@ export default function DashboardPlayer() {
                       <p className="font-medium text-sm">{group.wave} · {track.genre}</p>
                     </div>
                     <p className="text-xs mt-0.5" style={{ color: group.color }}>
-                      {group.freq} · muestra 20s
+                      {group.binauralHz} Hz binaural · muestra 20s
                     </p>
                     <div className="mt-2 h-0.5 bg-white/10 rounded-full overflow-hidden">
                       <div
