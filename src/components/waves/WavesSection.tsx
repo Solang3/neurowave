@@ -16,7 +16,7 @@ export default function WavesSection() {
         literatura científica internacional.
       </p>
 
-      <div className="grid grid-cols-5 divide-x divide-white/[0.07] border border-white/[0.07] rounded-2xl overflow-hidden">
+    <div className="flex overflow-x-auto md:grid md:grid-cols-5 divide-x divide-white/[0.07] border border-white/[0.07] rounded-2xl">
         {WAVES.map((wave) => (
           <WaveCard key={wave.id} wave={wave} />
         ))}

@@ -1,10 +1,10 @@
+import Link from 'next/link'
 import { Wave } from '@/types'
 
 interface Props {
   wave: Wave
 }
 
-// Mini SVG wave visualization per frequency
 function WaveViz({ wave }: { wave: Wave }) {
   const paths: Record<string, string> = {
     delta: 'M0,20 C20,4 40,36 60,20 C80,4 100,36 120,20',
@@ -16,25 +16,18 @@ function WaveViz({ wave }: { wave: Wave }) {
 
   return (
     <svg viewBox="0 0 120 40" preserveAspectRatio="none" className="h-10 w-full my-4">
-      <path
-        d={paths[wave.id]}
-        fill="none"
-        stroke={wave.color}
-        strokeWidth="1.5"
-        opacity="0.7"
-      />
+      <path d={paths[wave.id]} fill="none" stroke={wave.color} strokeWidth="1.5" opacity="0.7" />
     </svg>
   )
 }
 
 export default function WaveCard({ wave }: Props) {
   return (
-    <div className="bg-surface hover:bg-surface2 transition-colors p-6 relative group">
-      {/* Top color bar */}
-      <div
-        className="absolute top-0 left-0 right-0 h-[3px]"
-        style={{ background: wave.color }}
-      />
+    <Link
+      href={`/ondas/${wave.id}`}
+      className="bg-surface hover:bg-surface2 transition-colors p-6 relative group block min-w-[200px] md:min-w-0"
+    >
+      <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: wave.color }} />
 
       <p className="text-[11px] tracking-widest uppercase mb-3 font-medium" style={{ color: wave.color }}>
         {wave.freqRange}
@@ -50,13 +43,10 @@ export default function WaveCard({ wave }: Props) {
 
       <span
         className="inline-block text-xs rounded-full px-3 py-1"
-        style={{
-          background: `${wave.color}18`,
-          color: wave.color,
-        }}
+        style={{ background: `${wave.color}18`, color: wave.color }}
       >
         {wave.useCase}
       </span>
-    </div>
+    </Link>
   )
 }
