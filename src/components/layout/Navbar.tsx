@@ -52,13 +52,23 @@ export default function Navbar() {
           ))}
         </ul>
 
-        <Link
-          href="/dashboard"
-          className="hidden md:block bg-accent text-bg text-sm font-medium px-6 py-2.5 rounded-full hover:opacity-85 transition-opacity"
-        >
-          Empezar gratis
-        </Link>
+        {/* Desktop CTAs */}
+        <div className="hidden md:flex items-center gap-3">
+          <Link
+            href="/login"
+            className="text-sm text-muted hover:text-white transition-colors"
+          >
+            Iniciar sesión
+          </Link>
+          <Link
+            href="/registro"
+            className="bg-accent text-bg text-sm font-medium px-6 py-2.5 rounded-full hover:opacity-85 transition-opacity"
+          >
+            Empezar gratis
+          </Link>
+        </div>
 
+        {/* Hamburger */}
         <button
           onClick={() => setOpen(!open)}
           className="md:hidden z-50 w-10 h-10 flex flex-col items-center justify-center gap-[5px] rounded-xl"
@@ -76,6 +86,7 @@ export default function Navbar() {
         </button>
       </nav>
 
+      {/* Mobile menu */}
       <div className={`fixed inset-0 z-40 md:hidden transition-all duration-300 ${
         open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
       }`}>
@@ -101,15 +112,22 @@ export default function Navbar() {
             ))}
           </nav>
 
-          <div className={`px-8 mt-4 transition-all duration-300 ${
+          <div className={`px-8 mt-4 flex flex-col gap-3 transition-all duration-300 ${
             open ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`} style={{ transitionDelay: open ? '280ms' : '0ms' }}>
             <Link
-              href="/dashboard"
+              href="/registro"
               onClick={() => setOpen(false)}
               className="block w-full bg-accent text-bg text-center font-medium py-3.5 rounded-full hover:opacity-90 transition-opacity"
             >
               Empezar gratis
+            </Link>
+            <Link
+              href="/login"
+              onClick={() => setOpen(false)}
+              className="block w-full text-center text-sm text-muted hover:text-white transition-colors py-2"
+            >
+              Iniciar sesión
             </Link>
           </div>
 
