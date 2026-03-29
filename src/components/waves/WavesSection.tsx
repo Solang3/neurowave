@@ -3,7 +3,7 @@ import WaveCard from './WaveCard'
 
 export default function WavesSection() {
   return (
-    <section id="ondas" className="max-w-6xl mx-auto px-12 py-24">
+    <section id="ondas" className="max-w-6xl mx-auto px-4 md:px-12 py-16 md:py-24">
       <p className="text-xs tracking-widest uppercase text-accent mb-4">
         Las frecuencias
       </p>
