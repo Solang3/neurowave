@@ -46,5 +46,11 @@ export default async function AdminPage() {
     }
   })
 
+  // DEBUG — borrá esto después
+  console.log('users count:', users?.length)
+  console.log('authUsers count:', authUsers?.users?.length)
+  console.log('service role key exists:', !!process.env.SUPABASE_SERVICE_ROLE_KEY)
+
+
   return <AdminPanel users={usersWithEmail} />
 }
