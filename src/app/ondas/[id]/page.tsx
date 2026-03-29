@@ -8,8 +8,9 @@ export async function generateStaticParams() {
   return WAVES_SCIENCE.map((w) => ({ id: w.id }))
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
-  const wave = WAVES_SCIENCE.find((w) => w.id === params.id)
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const wave = WAVES_SCIENCE.find((w) => w.id === id)
   if (!wave) return {}
   return {
     title: `Ondas ${wave.name} (${wave.freqRange}) — NeuroWave`,
@@ -17,11 +18,12 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   }
 }
 
-export default function WavePage({ params }: { params: { id: string } }) {
-  const wave = WAVES_SCIENCE.find((w) => w.id === params.id)
+export default async function WavePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const wave = WAVES_SCIENCE.find((w) => w.id === id)
   if (!wave) notFound()
 
-  const waveIndex = WAVES_SCIENCE.findIndex((w) => w.id === params.id)
+  const waveIndex = WAVES_SCIENCE.findIndex((w) => w.id === id)
   const prev = WAVES_SCIENCE[waveIndex - 1]
   const next = WAVES_SCIENCE[waveIndex + 1]
 

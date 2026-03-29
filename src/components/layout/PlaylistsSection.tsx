@@ -25,7 +25,7 @@ const waveIconBg: Record<string, string> = {
 
 export default function PlaylistsSection() {
   return (
-    <section id="playlists" className="bg-surface border-t border-white/[0.07] py-24">
+    <section id="playlists" className="bg-surface border-t border-white/[0.07] py-16 md:py-24">
       <div className="max-w-5xl mx-auto px-12">
         <p className="text-xs tracking-widest uppercase text-accent mb-4">
           Playlists curadas
@@ -39,7 +39,7 @@ export default function PlaylistsSection() {
           y su experiencia personal. No algoritmos.
         </p>
 
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-12">
           {playlists.map((p) => (
             <div
               key={p.title}
