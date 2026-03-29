@@ -10,7 +10,7 @@ interface User {
   created_at: string
   last_sign_in: string | null
   provider: string
-  subscriptions: {
+  subscriptions?: {
     status: string
     provider: string
     currency: string
