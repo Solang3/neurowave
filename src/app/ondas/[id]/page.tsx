@@ -34,9 +34,14 @@ export default async function WavePage({ params }: { params: Promise<{ id: strin
         <Link href="/" className="font-serif text-xl">
           Neuro<span className="text-accent">Wave</span>
         </Link>
-        <Link href="/#ondas" className="text-sm text-muted hover:text-white transition-colors">
-          ← Volver a las ondas
-        </Link>
+        <div className="flex items-center gap-6">
+          <Link href="/dashboard" className="text-sm text-muted hover:text-white transition-colors">
+            ← Dashboard
+          </Link>
+          <Link href="/#ondas" className="text-sm text-muted hover:text-white transition-colors">
+            Todas las ondas
+          </Link>
+        </div>
       </nav>
 
       {/* Hero de la onda */}
