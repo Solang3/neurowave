@@ -70,7 +70,7 @@ const WAVE_GROUPS = [
   },
 ]
 
-const PREVIEW_SECONDS = 30
+const PREVIEW_SECONDS = 20
 
 export default function DashboardPlayer() {
   const [playingId, setPlayingId] = useState<string | null>(null)
