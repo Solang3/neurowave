@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
       )
       const subscription = await mpRes.json()
 
-      const supabase = createClient()
+      const supabase = await createClient()
 
       if (subscription.status === 'authorized') {
         // Activar suscripción en Supabase

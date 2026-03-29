@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
     const userId = subscription.custom_id
     if (!userId) return NextResponse.json({ ok: true })
 
-    const supabase = createClient()
+    const supabase = await createClient()
 
     if (eventType === 'BILLING.SUBSCRIPTION.ACTIVATED') {
       await supabase.from('subscriptions').upsert({
