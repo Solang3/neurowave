@@ -1,17 +1,23 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import AdminPanel from './AdminPanel'
+import { createClient as createAdminClient } from '@supabase/supabase-js'
 
 const ADMIN_EMAIL = 'solangegf@gmail.com'
 
 export default async function AdminPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-
   if (!user || user.email !== ADMIN_EMAIL) redirect('/')
 
-  // Traer todos los usuarios con sus suscripciones
-  const { data: users } = await supabase
+  // Usar admin client para saltear RLS
+  const adminClient = createAdminClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+
+  // Traer todos los usuarios con sus suscripciones usando admin client
+  const { data: users } = await adminClient
     .from('profiles')
     .select(`
       id,
@@ -26,8 +32,8 @@ export default async function AdminPage() {
     `)
     .order('created_at', { ascending: false })
 
-  // Traer emails de auth.users via admin
-  const { data: authUsers } = await supabase.auth.admin.listUsers()
+  // Traer emails de auth.users
+  const { data: authUsers } = await adminClient.auth.admin.listUsers()
 
   // Combinar profiles con emails
   const usersWithEmail = (users || []).map((profile) => {
