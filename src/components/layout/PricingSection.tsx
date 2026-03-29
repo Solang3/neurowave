@@ -57,7 +57,7 @@ export default function PricingSection() {
       <p className="text-muted mb-8">Sin trucos. Sin publicidad. Solo ciencia del sonido.</p>
 
       {/* Currency toggle */}
-      <div className="inline-flex gap-1 bg-surface border border-white/[0.07] rounded-full p-1 mb-12">
+    <div className="inline-flex flex-wrap gap-1 bg-surface border border-white/[0.07] rounded-full p-1 mb-8 md:mb-12">
         {(['ARS', 'USD'] as const).map((c) => (
           <button
             key={c}
@@ -73,7 +73,7 @@ export default function PricingSection() {
         ))}
       </div>
 
-      <div className="grid grid-cols-3 gap-6 items-center">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
         {plans.map((plan) => (
           <div
             key={plan.name}
