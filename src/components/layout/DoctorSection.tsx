@@ -1,7 +1,7 @@
 export default function DoctorSection() {
   return (
     <section id="ciencia" className="bg-surface border-y border-white/[0.07] py-24">
-      <div className="max-w-5xl mx-auto px-12 grid grid-cols-2 gap-20 items-center">
+      <div className="max-w-5xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 items-center">
 
         {/* Card */}
         <div className="relative">
