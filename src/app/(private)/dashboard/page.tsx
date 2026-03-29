@@ -61,7 +61,7 @@ export default async function DashboardPage() {
               {!isPro && <p className="text-xs text-muted mt-1">3 tracks de muestra · 20 segundos por track</p>}
             </div>
             {!isPro && (
-              <Link href="/#precios" className="bg-accent text-bg text-sm font-medium px-5 py-2.5 rounded-full hover:opacity-90 transition-opacity">
+              <Link href="/checkout?plan=monthly" className="bg-accent text-bg text-sm font-medium px-5 py-2.5 rounded-full hover:opacity-90 transition-opacity">
                 Mejorar a Pro
               </Link>
             )}
@@ -79,7 +79,7 @@ export default async function DashboardPage() {
               <p className="text-xs text-muted leading-relaxed">
                 Desbloqueá la biblioteca completa con más de 30 tracks y los protocolos del Dr. González
               </p>
-              <Link href="/#precios" className="flex-shrink-0 bg-accent text-bg text-xs font-medium px-4 py-2 rounded-full hover:opacity-90 transition-opacity">
+              <Link href="/checkout?plan=monthly" className="flex-shrink-0 bg-accent text-bg text-xs font-medium px-4 py-2 rounded-full hover:opacity-90 transition-opacity">
                 Ver Pro
               </Link>
             </div>

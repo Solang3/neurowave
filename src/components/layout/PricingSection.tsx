@@ -7,19 +7,19 @@ const plansARS = [
     name: 'Gratis', price: '$0', period: 'para siempre',
     features: ['3 playlists de muestra', 'Las 5 ondas explicadas', 'Artículos del blog'],
     locked: ['Biblioteca completa', 'Protocolos del Dr.'],
-    cta: 'Empezar gratis', featured: false,
+    cta: 'Empezar gratis', featured: false, href: '/login',
   },
   {
     name: 'Pro mensual', price: '$4.999', period: '/ mes ARS',
     features: ['Todo lo gratuito', 'Biblioteca completa', 'Protocolos del Dr. González', 'Bibliografía científica', 'Novedades primero'],
     locked: [],
-    cta: 'Suscribirse con MercadoPago', featured: true,
+    cta: 'Suscribirse con MercadoPago', featured: true, href: '/checkout?plan=monthly',
   },
   {
     name: 'Pro anual', price: '$41.990', period: '/ año ARS · 34% off',
     features: ['Todo lo de Pro', 'Acceso anticipado', 'PDF bibliografía completa', 'Soporte prioritario'],
     locked: [],
-    cta: 'Suscribirse anual', featured: false,
+    cta: 'Suscribirse anual', featured: false, href: '/checkout?plan=yearly',
   },
 ]
 
@@ -28,19 +28,19 @@ const plansUSD = [
     name: 'Free', price: '$0', period: 'forever',
     features: ['3 sample playlists', 'All 5 waves explained', 'Blog articles'],
     locked: ['Full library', 'Dr. protocols'],
-    cta: 'Start free', featured: false,
+    cta: 'Start free', featured: false, href: '/login',
   },
   {
     name: 'Pro monthly', price: '$9', period: '/ month USD',
     features: ['Everything in Free', 'Full playlist library', 'Dr. González protocols', 'Full bibliography', 'New content first'],
     locked: [],
-    cta: 'Subscribe with PayPal', featured: true,
+    cta: 'Subscribe with PayPal', featured: true, href: '/checkout?plan=monthly',
   },
   {
     name: 'Pro yearly', price: '$79', period: '/ year USD · 34% off',
     features: ['Everything in Pro', 'Early access', 'Full bibliography PDF', 'Priority support'],
     locked: [],
-    cta: 'Subscribe yearly', featured: false,
+    cta: 'Subscribe yearly', featured: false, href: '/checkout?plan=yearly',
   },
 ]
 
@@ -49,23 +49,20 @@ export default function PricingSection() {
   const plans = currency === 'ARS' ? plansARS : plansUSD
 
   return (
-    <section id="precios" className="max-w-5xl mx-auto px-12 py-24 text-center">
+    <section id="precios" className="max-w-5xl mx-auto px-4 md:px-12 py-16 md:py-24 text-center">
       <p className="text-xs tracking-widest uppercase text-accent mb-4">Planes</p>
-      <h2 className="font-serif text-5xl leading-tight tracking-tight mb-4">
+      <h2 className="font-serif text-4xl md:text-5xl leading-tight tracking-tight mb-4">
         Simple y <em className="text-accent">transparente</em>
       </h2>
       <p className="text-muted mb-8">Sin trucos. Sin publicidad. Solo ciencia del sonido.</p>
 
-      {/* Currency toggle */}
-    <div className="inline-flex flex-wrap gap-1 bg-surface border border-white/[0.07] rounded-full p-1 mb-8 md:mb-12">
+      <div className="inline-flex flex-wrap gap-1 bg-surface border border-white/[0.07] rounded-full p-1 mb-8 md:mb-12">
         {(['ARS', 'USD'] as const).map((c) => (
           <button
             key={c}
             onClick={() => setCurrency(c)}
             className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${
-              currency === c
-                ? 'bg-accent text-bg'
-                : 'text-muted hover:text-white'
+              currency === c ? 'bg-accent text-bg' : 'text-muted hover:text-white'
             }`}
           >
             {c === 'ARS' ? '🇦🇷 ARS — MercadoPago' : '🌐 USD — PayPal'}
@@ -77,9 +74,9 @@ export default function PricingSection() {
         {plans.map((plan) => (
           <div
             key={plan.name}
-            className={`rounded-3xl p-8 text-left border transition-colors ${
+            className={`rounded-3xl p-6 md:p-8 text-left border transition-colors ${
               plan.featured
-                ? 'bg-surface2 border-accent/25 scale-105'
+                ? 'bg-surface2 border-accent/25 md:scale-105'
                 : 'bg-surface border-white/[0.07] hover:border-white/15'
             }`}
           >
@@ -111,6 +108,7 @@ export default function PricingSection() {
             </ul>
 
             <button
+              onClick={() => window.location.href = plan.href}
               className={`w-full py-3 rounded-full text-sm font-medium transition-all ${
                 plan.featured
                   ? 'bg-accent text-bg hover:opacity-90'
