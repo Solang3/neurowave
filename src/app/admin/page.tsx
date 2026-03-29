@@ -17,20 +17,10 @@ export default async function AdminPage() {
   )
 
   // Traer todos los usuarios con sus suscripciones usando admin client
-  const { data: users } = await adminClient
-    .from('profiles')
-    .select(`
-      id,
-      full_name,
-      created_at,
-      subscriptions (
-        status,
-        provider,
-        currency,
-        current_period_end
-      )
-    `)
-    .order('created_at', { ascending: false })
+  const { data: users, error } = await adminClient
+  .from('profiles')
+  .select('id, full_name, created_at')
+  .order('created_at', { ascending: false })
 
   // Traer emails de auth.users
   const { data: authUsers } = await adminClient.auth.admin.listUsers()
@@ -47,9 +37,8 @@ export default async function AdminPage() {
   })
 
   // DEBUG — borrá esto después
+  console.log('users error:', error)
   console.log('users count:', users?.length)
-  console.log('authUsers count:', authUsers?.users?.length)
-  console.log('service role key exists:', !!process.env.SUPABASE_SERVICE_ROLE_KEY)
 
 
   return <AdminPanel users={usersWithEmail} />
