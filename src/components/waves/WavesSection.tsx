@@ -13,7 +13,7 @@ export default function WavesSection() {
       </h2>
       <p className="text-muted max-w-lg mb-16">
         Cada frecuencia activa un estado cerebral distinto, documentado en la
-        literatura científica internacional. asd
+        literatura científica internacional.
       </p>
 
       <div className="grid grid-cols-5 divide-x divide-white/[0.07] border border-white/[0.07] rounded-2xl overflow-hidden">
