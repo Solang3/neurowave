@@ -27,15 +27,25 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  // Si no está logueado y trata de entrar a zona privada → redirigir a login
-  if (!user && request.nextUrl.pathname.startsWith('/dashboard')) {
+  // Rutas privadas — redirigir al login si no está logueado
+  if (!user && (
+    request.nextUrl.pathname.startsWith('/dashboard') ||
+    request.nextUrl.pathname.startsWith('/admin')
+  )) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  // Si ya está logueado y trata de entrar a login/registro → redirigir al dashboard
+  // Admin — redirigir a la landing si no es el admin
+  if (user && request.nextUrl.pathname.startsWith('/admin')) {
+    if (user.email !== 'solangegf@gmail.com') {
+      return NextResponse.redirect(new URL('/', request.url))
+    }
+  }
+
+  // Si ya está logueado y trata de ir al login/registro → redirigir al dashboard
   if (user && (
-    request.nextUrl.pathname.startsWith('/login') ||
-    request.nextUrl.pathname.startsWith('/registro')
+    request.nextUrl.pathname === '/login' ||
+    request.nextUrl.pathname === '/registro'
   )) {
     return NextResponse.redirect(new URL('/dashboard', request.url))
   }
@@ -44,5 +54,10 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/login', '/registro'],
+  matcher: [
+    '/dashboard/:path*',
+    '/admin/:path*',
+    '/login',
+    '/registro',
+  ],
 }
