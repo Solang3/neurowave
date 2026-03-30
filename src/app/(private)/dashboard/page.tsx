@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import WavesPanel from './WavesPanel'
 import Link from 'next/link'
 import DashboardPlayer from './DashboardPlayer'
+import UserMenu from './UserMenu'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -14,6 +15,12 @@ export default async function DashboardPage() {
   .select('*')
   .eq('user_id', user.id)
   .maybeSingle()
+
+  const { data: profile } = await supabase
+  .from('profiles')
+  .select('full_name, username, avatar_url')
+  .eq('id', user.id)
+  .single()
 
   const isPro = subscription?.status === 'pro'
 
@@ -30,15 +37,13 @@ export default async function DashboardPage() {
         <Link href="/" className="font-serif text-xl">
             Neuro<span className="text-accent">Wave</span>
         </Link>
-        <div className="flex items-center gap-4">
-            <Link href="/foro" className="text-sm text-muted hover:text-white transition-colors">
-            Foro
-            </Link>
-            <span className="text-xs text-muted hidden md:block truncate max-w-[180px]">{user.email}</span>
-            <form action={signOut}>
-            <button className="text-xs text-muted hover:text-white transition-colors">Salir</button>
-            </form>
-        </div>
+        <UserMenu
+            email={user.email!}
+            fullName={profile?.full_name ?? null}
+            username={profile?.username ?? null}
+            avatarUrl={profile?.avatar_url ?? null}
+            onSignOut={signOut}
+        />
       </nav>
 
       <div className="max-w-4xl mx-auto px-6 md:px-8 py-12">

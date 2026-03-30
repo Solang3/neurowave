@@ -171,7 +171,7 @@ export default async function ForoPage({
                 </div>
                 <div className="mt-3 pt-3 border-t border-white/[0.05]">
                   <p className="text-xs text-muted">
-                    por {(post.profiles as any)?.full_name || 'Usuario'}
+                    por {(post.profiles as any)?.username ? `@${(post.profiles as any).username}` : (post.profiles as any)?.full_name || 'Usuario'}
                   </p>
                 </div>
               </Link>

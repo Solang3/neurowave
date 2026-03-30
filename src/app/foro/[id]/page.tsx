@@ -60,7 +60,8 @@ export default async function PostPage({ params }: { params: { id: string } }) {
           </span>
           <h1 className="font-serif text-3xl mb-3">{post.title}</h1>
           <p className="text-xs text-muted mb-6">
-            por {(post.profiles as any)?.full_name || 'Usuario'} · {formatDate(post.created_at)}
+            por {(post.profiles as any)?.username ? `@${(post.profiles as any).username}` : (post.profiles as any)?.full_name || 'Usuario'
+} · {formatDate(post.created_at)}
           </p>
           <div className="bg-surface border border-white/[0.07] rounded-2xl p-6">
             <p className="text-sm text-white/80 leading-relaxed whitespace-pre-wrap">{post.content}</p>
