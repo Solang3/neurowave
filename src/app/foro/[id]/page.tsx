@@ -82,6 +82,30 @@ export default async function PostPage({ params }: { params: { id: string } }) {
     )}
   </div>
 </nav>
+{!user && (
+  <div className="bg-accent/5 border border-accent/20 rounded-2xl p-4 flex items-center justify-between gap-4 mb-8">
+    <div className="flex items-center gap-3">
+      <span className="text-xl">👋</span>
+      <div>
+        <p className="text-sm font-medium">¿Querés participar en el foro?</p>
+        <p className="text-xs text-muted mt-0.5">
+          Registrate gratis y completá tu perfil para postear y comentar
+        </p>
+      </div>
+    </div>
+    <div className="flex items-center gap-2 flex-shrink-0">
+      <Link href="/login" className="text-xs text-muted hover:text-white transition-colors px-3 py-2">
+        Iniciar sesión
+      </Link>
+      <Link
+        href="/registro"
+        className="bg-accent text-bg text-xs font-medium px-4 py-2 rounded-full hover:opacity-90 transition-opacity"
+      >
+        Registrate gratis
+      </Link>
+    </div>
+  </div>
+)}
 
       <div className="max-w-2xl mx-auto px-6 py-12">
         {/* Post */}
@@ -127,15 +151,49 @@ export default async function PostPage({ params }: { params: { id: string } }) {
         </div>
 
         {/* Formulario de respuesta */}
-        {user ? (
-          <CommentForm postId={post.id} userId={user.id} />
+        {!user ? (
+        <div className="bg-accent/5 border border-accent/20 rounded-2xl p-6">
+            <div className="flex items-center gap-3 mb-4">
+            <span className="text-2xl">💬</span>
+            <div>
+                <p className="font-medium text-sm">Querés responder este hilo?</p>
+                <p className="text-xs text-muted mt-0.5">
+                Necesitás una cuenta con perfil completo para participar
+                </p>
+            </div>
+            </div>
+            <div className="flex items-center gap-3">
+            <Link
+                href="/registro"
+                className="bg-accent text-bg text-sm font-medium px-5 py-2.5 rounded-full hover:opacity-90 transition-opacity"
+            >
+                Registrate gratis
+            </Link>
+            <Link href="/login" className="text-sm text-muted hover:text-white transition-colors">
+                Ya tengo cuenta
+            </Link>
+            </div>
+        </div>
+        ) : !profile?.username ? (
+        <div className="bg-surface border border-white/[0.07] rounded-2xl p-6">
+            <div className="flex items-center gap-3 mb-4">
+            <span className="text-2xl">⚠️</span>
+            <div>
+                <p className="font-medium text-sm">Completá tu perfil para comentar</p>
+                <p className="text-xs text-muted mt-0.5">
+                Necesitás elegir un nombre de usuario antes de participar en el foro
+                </p>
+            </div>
+            </div>
+            <Link
+            href="/perfil"
+            className="inline-block bg-accent text-bg text-sm font-medium px-5 py-2.5 rounded-full hover:opacity-90 transition-opacity"
+            >
+            Completar perfil →
+            </Link>
+        </div>
         ) : (
-          <div className="bg-surface border border-white/[0.07] rounded-2xl p-6 text-center">
-            <p className="text-sm text-muted mb-4">
-              <Link href="/registro" className="text-accent hover:underline">Registrate gratis</Link>
-              {' '}para dejar una respuesta
-            </p>
-          </div>
+        <CommentForm postId={post.id} userId={user.id} />
         )}
       </div>
     </div>
