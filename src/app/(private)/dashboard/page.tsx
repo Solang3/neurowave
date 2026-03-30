@@ -9,11 +9,14 @@ export default async function DashboardPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: subscription } = await supabase
-    .from('subscriptions')
-    .select('*')
-    .eq('user_id', user.id)
-    .single()
+  const { data: subscription, error: subError } = await supabase
+  .from('subscriptions')
+  .select('*')
+  .eq('user_id', user.id)
+  .maybeSingle()
+
+console.log('subscription:', subscription)
+console.log('subError:', subError)
 
   const isPro = subscription?.status === 'pro'
 
