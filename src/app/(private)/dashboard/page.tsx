@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import WavesPanel from './WavesPanel'
 import Link from 'next/link'
-import { WAVES } from '@/lib/waves'
 import DashboardPlayer from './DashboardPlayer'
 
 export default async function DashboardPage() {
@@ -79,19 +79,7 @@ export default async function DashboardPage() {
         </div>
         )}
 
-        <div>
-          <h2 className="font-serif text-2xl mb-5">Las 5 ondas</h2>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-            {WAVES.map((wave) => (
-              <Link key={wave.id} href={`/ondas/${wave.id}`} className="bg-surface border border-white/[0.07] hover:border-white/[0.15] rounded-xl p-4 transition-all">
-                <div className="h-0.5 rounded-full mb-3" style={{ background: wave.color }} />
-                <p className="text-xs font-medium mb-0.5" style={{ color: wave.color }}>{wave.freqRange}</p>
-                <p className="font-serif text-lg">{wave.name}</p>
-                <p className="text-xs text-muted mt-1">{wave.useCase}</p>
-              </Link>
-            ))}
-          </div>
-        </div>
+        <WavesPanel />
 
       </div>
     </div>
