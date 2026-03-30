@@ -15,7 +15,11 @@ const WAVES: Record<string, { label: string; emoji: string; color: string }> = {
 export default async function PostPage({ params }: { params: { id: string } }) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-
+  const { data: profile } = user ? await supabase
+    .from('profiles')
+    .select('full_name, username, avatar_url')
+    .eq('id', user.id)
+    .maybeSingle() : { data: null }
   const { data: post } = await supabase
     .from('posts')
     .select(`id, title, content, wave, created_at, profiles!user_id (full_name)`)
@@ -40,14 +44,44 @@ export default async function PostPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="min-h-screen bg-bg">
-      <nav className="border-b border-white/[0.07] px-6 md:px-12 py-4 flex items-center justify-between">
-        <Link href="/" className="font-serif text-xl">
-          Neuro<span className="text-accent">Wave</span>
+      <nav className={`fixed top-0 left-0 right-0 z-50 border-b border-white/[0.07] bg-bg/95 backdrop-blur-xl px-6 md:px-12 py-4 flex items-center justify-between`}>
+  <Link href="/" className="font-serif text-xl">
+    Neuro<span className="text-accent">Wave</span>
+  </Link>
+
+  {/* Links desktop */}
+  <ul className="hidden md:flex gap-8 list-none">
+    <li><Link href="/#ondas" className="text-sm text-muted hover:text-white transition-colors">Las ondas</Link></li>
+    <li><Link href="/#ciencia" className="text-sm text-muted hover:text-white transition-colors">Ciencia</Link></li>
+    <li><Link href="/#playlists" className="text-sm text-muted hover:text-white transition-colors">Playlists</Link></li>
+    <li><Link href="/foro" className="text-sm text-white">Foro</Link></li>
+  </ul>
+
+  <div className="flex items-center gap-4">
+    {user ? (
+      <>
+        <Link href="/dashboard" className="text-sm text-muted hover:text-white transition-colors hidden md:block">
+          Mis playlists
         </Link>
-        <Link href="/foro" className="text-sm text-muted hover:text-white transition-colors">
-          ← Volver al foro
+        <Link href="/perfil" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          {profile?.avatar_url ? (
+            <img src={profile.avatar_url} alt="Avatar" className="w-8 h-8 rounded-full object-cover border border-white/10" />
+          ) : (
+            <div className="w-8 h-8 rounded-full bg-accent/20 border border-accent/30 flex items-center justify-center">
+              <span className="text-xs font-medium text-accent">
+                {profile?.full_name?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase()}
+              </span>
+            </div>
+          )}
         </Link>
-      </nav>
+      </>
+    ) : (
+      <Link href="/login" className="text-sm text-muted hover:text-white transition-colors">
+        Iniciar sesión
+      </Link>
+    )}
+  </div>
+</nav>
 
       <div className="max-w-2xl mx-auto px-6 py-12">
         {/* Post */}
