@@ -15,9 +15,6 @@ export default async function DashboardPage() {
   .eq('user_id', user.id)
   .maybeSingle()
 
-console.log('subscription:', subscription)
-console.log('subError:', subError)
-
   const isPro = subscription?.status === 'pro'
 
   async function signOut() {
@@ -74,10 +71,10 @@ console.log('subError:', subError)
         {!isPro && (
           <div className="mb-10">
             <div className="flex items-center justify-between mb-5">
-              <h2 className="font-serif text-2xl">Muestras gratuitas</h2>
-              <span className="text-xs text-muted">20 seg · Solo auriculares</span>
+                <h2 className="font-serif text-2xl">Muestras gratuitas</h2>
+                <span className="text-xs text-muted">40 seg · Solo auriculares</span>
             </div>
-            <DashboardPlayer />
+            <DashboardPlayer isPro={false} />
             <div className="mt-4 bg-surface border border-white/[0.07] rounded-xl p-4 flex items-center justify-between gap-4">
               <p className="text-xs text-muted leading-relaxed">
                 Desbloqueá la biblioteca completa con más de 30 tracks y los protocolos del Dr. González
@@ -90,16 +87,13 @@ console.log('subError:', subError)
         )}
 
         {isPro && (
-          <div className="mb-10">
-            <h2 className="font-serif text-2xl mb-5">Tu biblioteca</h2>
-            <div className="bg-surface border border-white/[0.07] rounded-2xl p-8 text-center">
-              <p className="font-serif text-xl mb-2">Biblioteca completa desbloqueada ✦</p>
-              <p className="text-muted text-sm mb-5">Acceso a todos los tracks y protocolos del Dr. González</p>
-              <Link href="/#playlists" className="inline-block bg-accent text-bg text-sm font-medium px-6 py-2.5 rounded-full hover:opacity-90 transition-opacity">
-                Ir a las playlists
-              </Link>
+        <div className="mb-10">
+            <div className="flex items-center justify-between mb-5">
+            <h2 className="font-serif text-2xl">Tu biblioteca Pro</h2>
+            <span className="text-xs text-accent border border-accent/20 px-3 py-1 rounded-full">✦ Pro</span>
             </div>
-          </div>
+            <DashboardPlayer isPro={true} />
+        </div>
         )}
 
         <div>

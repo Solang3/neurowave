@@ -75,9 +75,7 @@ const WAVE_GROUPS = [
   },
 ]
 
-const PREVIEW_SECONDS = 20
-
-export default function DashboardPlayer() {
+export default function DashboardPlayer({ isPro = false }: { isPro?: boolean }) {
   const [playingId, setPlayingId] = useState<string | null>(null)
   const [progress, setProgress] = useState<Record<string, number>>({})
   const [elapsed, setElapsed] = useState<Record<string, number>>({})
@@ -85,7 +83,8 @@ export default function DashboardPlayer() {
   const [openWave, setOpenWave] = useState<string>('Delta')
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
-
+  const PREVIEW_SECONDS = isPro ? Infinity : 40
+  
   useEffect(() => {
     return () => {
       audioRef.current?.pause()
@@ -193,7 +192,7 @@ export default function DashboardPlayer() {
                       <p className="font-medium text-sm">{group.wave} · {track.genre}</p>
                     </div>
                     <p className="text-xs mt-0.5" style={{ color: group.color }}>
-                      {group.binauralHz} Hz binaural · muestra 20s
+                      {group.binauralHz} Hz binaural · {isPro ? 'completa' : 'muestra 40s'}
                     </p>
                     <div className="mt-2 h-0.5 bg-white/10 rounded-full overflow-hidden">
                       <div
