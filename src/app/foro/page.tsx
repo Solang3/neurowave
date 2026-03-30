@@ -18,7 +18,7 @@ export default async function ForoPage({
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   const activeWave = searchParams.wave || 'general'
-  const activeUser = searchParams.user
+  const filterUserId = searchParams.user
 
   // Perfil del usuario logueado
   const { data: profile } = user ? await supabase
@@ -35,13 +35,20 @@ export default async function ForoPage({
 
   if (activeWave !== 'general') {
     postsQuery = postsQuery.eq('wave', activeWave)
-    }
+  }
 
-  if (activeUser) {
-    postsQuery = postsQuery.eq('user_id', activeUser)
+  if (filterUserId) {
+    postsQuery = postsQuery.eq('user_id', filterUserId)
   }
 
   const { data: posts } = await postsQuery
+
+  // Perfil del usuario filtrado
+  const { data: filteredUserProfile } = filterUserId ? await supabase
+    .from('profiles')
+    .select('full_name, username')
+    .eq('id', filterUserId)
+    .maybeSingle() : { data: null }
 
   // Traer perfiles de autores por separado
   const authorIds = [...new Set(posts?.map((p) => p.user_id) || [])]
@@ -72,6 +79,10 @@ export default async function ForoPage({
   function getCommentCount(postId: string) {
     return commentCounts?.filter((c) => c.post_id === postId).length || 0
   }
+
+  const filteredUserName = filteredUserProfile?.username
+    ? `@${filteredUserProfile.username}`
+    : filteredUserProfile?.full_name || 'este usuario'
 
   return (
     <div className="min-h-screen bg-bg">
@@ -114,13 +125,6 @@ export default async function ForoPage({
 
       <div className="max-w-4xl mx-auto px-6 md:px-8 pt-24 pb-12">
 
-        {activeUser && (
-        <div className="bg-surface border border-white/[0.07] rounded-xl px-4 py-3 flex items-center justify-between mb-6">
-            <p className="text-sm text-muted">Mostrando posts de un usuario específico</p>
-            <Link href="/foro" className="text-xs text-accent hover:underline">Ver todos</Link>
-        </div>
-        )}
-
         {/* Banner no logueado */}
         {!user && (
           <div className="bg-accent/5 border border-accent/20 rounded-2xl p-4 flex items-center justify-between gap-4 mb-8 flex-wrap">
@@ -149,12 +153,27 @@ export default async function ForoPage({
           <p className="text-muted text-sm">Compartí tu experiencia, hacé preguntas y conectá con otros usuarios.</p>
         </div>
 
+        {/* Banner filtro por usuario */}
+        {filterUserId && (
+          <div className="bg-surface border border-white/[0.07] rounded-xl px-4 py-3 flex items-center justify-between mb-6">
+            <p className="text-sm text-muted">
+              Mostrando posts de <span className="text-white">{filteredUserName}</span>
+            </p>
+            <Link href="/foro" className="text-xs text-accent hover:underline">
+              Ver todos
+            </Link>
+          </div>
+        )}
+
         {/* Tabs por onda */}
         <div className="flex gap-2 overflow-x-auto pb-2 mb-6">
           {WAVES.map((w) => (
             <Link
               key={w.id}
-              href={w.id === 'general' ? '/foro' : `/foro?wave=${w.id}`}
+              href={w.id === 'general'
+                ? (filterUserId ? `/foro?user=${filterUserId}` : '/foro')
+                : (filterUserId ? `/foro?wave=${w.id}&user=${filterUserId}` : `/foro?wave=${w.id}`)
+              }
               className="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full text-sm transition-all"
               style={{
                 background: activeWave === w.id ? `${w.color}20` : 'transparent',
