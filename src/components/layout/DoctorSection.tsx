@@ -13,10 +13,7 @@ export default function DoctorSection() {
             </div>
 
             <blockquote className="font-serif text-lg leading-relaxed italic mb-6">
-              "Usé clonazepam durante años para poder descansar. Empecé a
-              explorar las ondas binaurales, leí la evidencia disponible, y en
-              pocas semanas pude dejarlo. Comparto esto como mi experiencia
-              personal, no como indicación médica."
+              ""Usé benzodiazepinas durante años para poder descansar. Empecé a explorar las ondas binaurales, leí la evidencia disponible, y en pocas semanas pude dejarlas. Comparto esto como mi experiencia personal, no como indicación médica."
             </blockquote>
 
             <p className="font-medium text-sm">Dr. Rogelio González</p>
