@@ -52,7 +52,7 @@ const WAVE_GROUPS = [
   },
 ]
 
-const PREVIEW_SECONDS = 20
+const PREVIEW_SECONDS = 40
 
 export default function PlaylistsSection() {
   const [openWave, setOpenWave] = useState('Delta')
