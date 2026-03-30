@@ -24,11 +24,17 @@ export default async function PostPage({ params }: { params: { id: string } }) {
     .maybeSingle() : { data: null }
 
   // Post sin join
-  const { data: post } = await supabase
-    .from('posts')
-    .select('id, title, content, wave, created_at, user_id')
-    .eq('id', params.id)
-    .single()
+  const { data: post, error: postError } = await supabase
+  .from('posts')
+  .select('id, title, content, wave, created_at, user_id')
+  .eq('id', params.id)
+  .single()
+
+console.log('post:', post)
+console.log('postError:', postError)
+console.log('params.id:', params.id)
+
+if (!post) redirect('/foro')
 
   if (!post) redirect('/foro')
 
