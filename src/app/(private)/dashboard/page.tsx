@@ -28,18 +28,16 @@ export default async function DashboardPage() {
     <div className="min-h-screen bg-bg">
       <nav className="border-b border-white/[0.07] px-6 md:px-12 py-4 flex items-center justify-between">
         <Link href="/" className="font-serif text-xl">
-          Neuro<span className="text-accent">Wave</span>
+            Neuro<span className="text-accent">Wave</span>
         </Link>
         <div className="flex items-center gap-4">
-          <span className={`text-xs font-medium px-3 py-1 rounded-full ${
-            isPro ? 'bg-accent/15 text-accent border border-accent/25' : 'bg-white/5 text-muted border border-white/[0.07]'
-          }`}>
-            {isPro ? '✦ Pro' : 'Free'}
-          </span>
-          <span className="text-xs text-muted hidden md:block truncate max-w-[180px]">{user.email}</span>
-          <form action={signOut}>
+            <Link href="/foro" className="text-sm text-muted hover:text-white transition-colors">
+            Foro
+            </Link>
+            <span className="text-xs text-muted hidden md:block truncate max-w-[180px]">{user.email}</span>
+            <form action={signOut}>
             <button className="text-xs text-muted hover:text-white transition-colors">Salir</button>
-          </form>
+            </form>
         </div>
       </nav>
 
