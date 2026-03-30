@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
 const R2_PUBLIC = 'https://pub-78c976d8802a412ca89533a0734f5054.r2.dev'
 
@@ -54,7 +54,6 @@ const WAVE_GROUPS = [
 
 type Track = { id: string; genre: string; emoji: string; path: string }
 type Group = typeof WAVE_GROUPS[0]
-
 interface QueueItem { track: Track; group: Group }
 
 export default function DashboardPlayer({ isPro = false }: { isPro?: boolean }) {
@@ -69,13 +68,22 @@ export default function DashboardPlayer({ isPro = false }: { isPro?: boolean }) 
   const [duration, setDuration] = useState(0)
   const [loading, setLoading] = useState(false)
 
+  // Refs para que los callbacks siempre vean valores actuales
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
+  const loopRef = useRef(loop)
+  const shuffleRef = useRef(shuffle)
+  const queueRef = useRef(queue)
+  const queueIndexRef = useRef(queueIndex)
+
+  // Sincronizar refs con state
+  useEffect(() => { loopRef.current = loop }, [loop])
+  useEffect(() => { shuffleRef.current = shuffle }, [shuffle])
+  useEffect(() => { queueRef.current = queue }, [queue])
+  useEffect(() => { queueIndexRef.current = queueIndex }, [queueIndex])
 
   const PREVIEW_SECONDS = isPro ? Infinity : 20
-  const currentItem = queue[queueIndex] ?? null
 
-  // Limpiar al desmontar
   useEffect(() => {
     return () => {
       audioRef.current?.pause()
@@ -83,29 +91,52 @@ export default function DashboardPlayer({ isPro = false }: { isPro?: boolean }) 
     }
   }, [])
 
-  const stopTimer = () => {
+  function stopTimer() {
     if (intervalRef.current) clearInterval(intervalRef.current)
   }
 
-  const startTimer = () => {
+  function startTimer(audio: HTMLAudioElement) {
     stopTimer()
     intervalRef.current = setInterval(() => {
-      const audio = audioRef.current
-      if (!audio) return
       setElapsed(audio.currentTime)
       setDuration(audio.duration || 0)
-
-      // Límite free
       if (!isPro && audio.currentTime >= PREVIEW_SECONDS) {
         audio.pause()
         setIsPlaying(false)
         stopTimer()
-        handleNext(true)
+        advanceQueue()
       }
     }, 250)
   }
 
-  const playTrack = useCallback(async (item: QueueItem) => {
+  function advanceQueue() {
+    const q = queueRef.current
+    const idx = queueIndexRef.current
+    if (q.length === 0) return
+
+    let next: number
+    if (shuffleRef.current) {
+      next = Math.floor(Math.random() * q.length)
+    } else {
+      next = idx + 1
+    }
+
+    if (next >= q.length) {
+      if (loopRef.current) {
+        next = 0
+      } else {
+        setIsPlaying(false)
+        stopTimer()
+        return
+      }
+    }
+
+    setQueueIndex(next)
+    queueIndexRef.current = next
+    loadAndPlay(q[next])
+  }
+
+  async function loadAndPlay(item: QueueItem) {
     audioRef.current?.pause()
     stopTimer()
     setLoading(true)
@@ -125,57 +156,23 @@ export default function DashboardPlayer({ isPro = false }: { isPro?: boolean }) 
       const audio = new Audio(url)
       audio.volume = 0.8
       audioRef.current = audio
-
-      audio.onended = () => handleNext(false)
+      audio.onended = () => advanceQueue()
       audio.onloadedmetadata = () => setDuration(audio.duration)
-
       await audio.play()
       setIsPlaying(true)
-      startTimer()
+      startTimer(audio)
     } catch {
       console.error('Error reproduciendo')
     } finally {
       setLoading(false)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isPro, loop, shuffle, queue])
-
-  function handleNext(auto: boolean) {
-    if (queue.length === 0) return
-    let next: number
-
-    if (shuffle) {
-      next = Math.floor(Math.random() * queue.length)
-    } else {
-      next = queueIndex + 1
-    }
-
-    if (next >= queue.length) {
-      if (loop) {
-        next = 0
-      } else {
-        setIsPlaying(false)
-        stopTimer()
-        return
-      }
-    }
-
-    setQueueIndex(next)
-    playTrack(queue[next])
-  }
-
-  function handlePrev() {
-    if (queue.length === 0) return
-    const prev = queueIndex > 0 ? queueIndex - 1 : loop ? queue.length - 1 : 0
-    setQueueIndex(prev)
-    playTrack(queue[prev])
   }
 
   function handlePlayPause() {
-    if (!currentItem) return
     const audio = audioRef.current
     if (!audio) {
-      playTrack(currentItem)
+      const q = queueRef.current
+      if (q.length > 0) loadAndPlay(q[queueIndexRef.current])
       return
     }
     if (isPlaying) {
@@ -185,8 +182,22 @@ export default function DashboardPlayer({ isPro = false }: { isPro?: boolean }) 
     } else {
       audio.play()
       setIsPlaying(true)
-      startTimer()
+      startTimer(audio)
     }
+  }
+
+  function handleNext() {
+    advanceQueue()
+  }
+
+  function handlePrev() {
+    const q = queueRef.current
+    const idx = queueIndexRef.current
+    if (q.length === 0) return
+    const prev = idx > 0 ? idx - 1 : loopRef.current ? q.length - 1 : 0
+    setQueueIndex(prev)
+    queueIndexRef.current = prev
+    loadAndPlay(q[prev])
   }
 
   function toggleSelect(track: Track, group: Group) {
@@ -204,15 +215,39 @@ export default function DashboardPlayer({ isPro = false }: { isPro?: boolean }) 
   function playAll(group: Group) {
     const items = group.tracks.map((t) => ({ track: t, group }))
     setQueue(items)
+    queueRef.current = items
     setSelected(new Set(group.tracks.map((t) => t.id)))
     setQueueIndex(0)
-    playTrack(items[0])
+    queueIndexRef.current = 0
+    loadAndPlay(items[0])
+  }
+
+  function playDirectly(track: Track, group: Group) {
+    const existingIdx = queueRef.current.findIndex((i) => i.track.id === track.id)
+    if (existingIdx >= 0) {
+      setQueueIndex(existingIdx)
+      queueIndexRef.current = existingIdx
+      loadAndPlay(queueRef.current[existingIdx])
+    } else {
+      const newItem = { track, group }
+      const newQueue = [...queueRef.current, newItem]
+      setQueue(newQueue)
+      queueRef.current = newQueue
+      const newSelected = new Set(selected)
+      newSelected.add(track.id)
+      setSelected(newSelected)
+      const newIdx = newQueue.length - 1
+      setQueueIndex(newIdx)
+      queueIndexRef.current = newIdx
+      loadAndPlay(newItem)
+    }
   }
 
   function removeFromQueue(idx: number) {
     const item = queue[idx]
     const newQueue = queue.filter((_, i) => i !== idx)
     setQueue(newQueue)
+    queueRef.current = newQueue
     const newSelected = new Set(selected)
     newSelected.delete(item.track.id)
     setSelected(newSelected)
@@ -220,118 +255,130 @@ export default function DashboardPlayer({ isPro = false }: { isPro?: boolean }) 
       if (newQueue.length > 0) {
         const newIdx = Math.min(idx, newQueue.length - 1)
         setQueueIndex(newIdx)
-        playTrack(newQueue[newIdx])
+        queueIndexRef.current = newIdx
+        loadAndPlay(newQueue[newIdx])
       } else {
         audioRef.current?.pause()
         setIsPlaying(false)
+        stopTimer()
       }
+    } else if (idx < queueIndex) {
+      setQueueIndex(queueIndex - 1)
+      queueIndexRef.current = queueIndex - 1
     }
   }
 
   function formatTime(secs: number) {
-    if (!isFinite(secs)) return '—'
+    if (!isFinite(secs) || isNaN(secs)) return '—'
     const m = Math.floor(secs / 60)
     const s = Math.floor(secs % 60)
     return `${m}:${s.toString().padStart(2, '0')}`
   }
 
+  const currentItem = queue[queueIndex] ?? null
   const currentGroup = WAVE_GROUPS.find((g) => g.wave === openWave)!
-  const progressPct = duration > 0 ? (elapsed / Math.min(duration, isPro ? Infinity : PREVIEW_SECONDS)) * 100 : 0
+  const progressPct = duration > 0 ? (elapsed / (isPro ? duration : Math.min(duration, PREVIEW_SECONDS))) * 100 : 0
 
   return (
     <div className="flex flex-col gap-6">
 
-      {/* Mini player fijo — solo si hay cola */}
+      {/* Mini player */}
       {currentItem && (
-        <div
-          className="rounded-2xl p-4 border"
-          style={{ background: `${currentItem.group.color}10`, borderColor: `${currentItem.group.color}30` }}
-        >
-          {/* Info track actual */}
+        <div className="rounded-2xl p-5 border" style={{ background: `${currentItem.group.color}10`, borderColor: `${currentItem.group.color}30` }}>
           <div className="flex items-center gap-3 mb-3">
             <span className="text-2xl">{currentItem.track.emoji}</span>
             <div className="flex-1 min-w-0">
-              <p className="font-medium text-sm truncate">
-                {currentItem.group.wave} · {currentItem.track.genre}
-              </p>
+              <p className="font-medium text-sm truncate">{currentItem.group.wave} · {currentItem.track.genre}</p>
               <p className="text-xs mt-0.5" style={{ color: currentItem.group.color }}>
-                {currentItem.group.binauralHz} Hz binaural {isPro ? '· completa' : '· muestra 20s'}
+                {currentItem.group.binauralHz} Hz binaural · {isPro ? 'completa' : 'muestra 20s'}
               </p>
             </div>
-            <span className="text-xs text-muted font-mono">
-              {formatTime(elapsed)} / {isPro ? formatTime(duration) : '0:20'}
+            <span className="text-xs text-muted font-mono text-right">
+              {formatTime(elapsed)}{isPro ? ` / ${formatTime(duration)}` : ' / 0:20'}
             </span>
           </div>
 
-          {/* Barra de progreso */}
-          <div className="h-0.5 bg-white/10 rounded-full overflow-hidden mb-3">
-            <div
-              className="h-full rounded-full transition-all duration-200"
-              style={{ width: `${Math.min(progressPct, 100)}%`, background: currentItem.group.color }}
-            />
+          <div className="h-1 bg-white/10 rounded-full overflow-hidden mb-4">
+            <div className="h-full rounded-full transition-all duration-200"
+              style={{ width: `${Math.min(progressPct, 100)}%`, background: currentItem.group.color }} />
           </div>
 
-          {/* Controles */}
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
               {/* Shuffle */}
               <button
                 onClick={() => setShuffle(!shuffle)}
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-xs transition-all ${shuffle ? 'text-white' : 'text-muted'}`}
-                style={{ background: shuffle ? `${currentItem.group.color}30` : 'transparent' }}
                 title="Aleatorio"
+                className="w-9 h-9 rounded-full flex items-center justify-center transition-all"
+                style={{ background: shuffle ? `${currentItem.group.color}30` : 'rgba(255,255,255,0.05)' }}
               >
-                ⇄
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={shuffle ? currentItem.group.color : '#6b7580'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="16 3 21 3 21 8"/>
+                  <line x1="4" y1="20" x2="21" y2="3"/>
+                  <polyline points="21 16 21 21 16 21"/>
+                  <line x1="15" y1="15" x2="21" y2="21"/>
+                </svg>
               </button>
+
               {/* Prev */}
-              <button onClick={handlePrev} className="w-8 h-8 rounded-full flex items-center justify-center text-muted hover:text-white transition-all">
-                ⏮
+              <button onClick={handlePrev} className="w-9 h-9 rounded-full flex items-center justify-center bg-white/5 hover:bg-white/10 transition-all">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="text-white">
+                  <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+                </svg>
               </button>
+
               {/* Play/Pause */}
               <button
                 onClick={handlePlayPause}
                 disabled={loading}
-                className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-105 disabled:opacity-50"
+                className="w-11 h-11 rounded-full flex items-center justify-center transition-all hover:scale-105 disabled:opacity-50"
                 style={{ background: currentItem.group.color }}
               >
                 {loading ? (
-                  <svg className="animate-spin" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <svg className="animate-spin" width="14" height="14" viewBox="0 0 12 12" fill="none">
                     <circle cx="6" cy="6" r="5" stroke="#080c10" strokeWidth="1.5" strokeDasharray="8 8"/>
                   </svg>
                 ) : isPlaying ? (
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                    <rect x="1" y="1" width="4" height="10" rx="1" fill="#080c10"/>
-                    <rect x="7" y="1" width="4" height="10" rx="1" fill="#080c10"/>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="#080c10">
+                    <rect x="6" y="4" width="4" height="16" rx="1"/>
+                    <rect x="14" y="4" width="4" height="16" rx="1"/>
                   </svg>
                 ) : (
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                    <path d="M2 1L11 6L2 11V1Z" fill="#080c10"/>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="#080c10">
+                    <path d="M5 3l14 9-14 9V3z"/>
                   </svg>
                 )}
               </button>
+
               {/* Next */}
-              <button onClick={() => handleNext(false)} className="w-8 h-8 rounded-full flex items-center justify-center text-muted hover:text-white transition-all">
-                ⏭
+              <button onClick={handleNext} className="w-9 h-9 rounded-full flex items-center justify-center bg-white/5 hover:bg-white/10 transition-all">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="text-white">
+                  <path d="M6 18l8.5-6L6 6v12zm2.5-6l5.5-4v8l-5.5-4zM16 6h2v12h-2z"/>
+                </svg>
               </button>
+
               {/* Loop */}
               <button
                 onClick={() => setLoop(!loop)}
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-xs transition-all ${loop ? 'text-white' : 'text-muted'}`}
-                style={{ background: loop ? `${currentItem.group.color}30` : 'transparent' }}
                 title="Repetir"
+                className="w-9 h-9 rounded-full flex items-center justify-center transition-all"
+                style={{ background: loop ? `${currentItem.group.color}30` : 'rgba(255,255,255,0.05)' }}
               >
-                ↻
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={loop ? currentItem.group.color : '#6b7580'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="17 1 21 5 17 9"/>
+                  <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+                  <polyline points="7 23 3 19 7 15"/>
+                  <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+                </svg>
               </button>
             </div>
 
-            <span className="text-xs text-muted">
-              {queueIndex + 1} / {queue.length}
-            </span>
+            <span className="text-xs text-muted">{queueIndex + 1} / {queue.length}</span>
           </div>
         </div>
       )}
 
-      {/* Cola actual */}
+      {/* Cola */}
       {queue.length > 0 && (
         <div>
           <p className="text-xs tracking-widest uppercase text-muted mb-3">Cola de reproducción</p>
@@ -339,28 +386,21 @@ export default function DashboardPlayer({ isPro = false }: { isPro?: boolean }) 
             {queue.map((item, idx) => (
               <div
                 key={`${item.track.id}-${idx}`}
-                className={`flex items-center gap-3 px-4 py-2.5 rounded-xl border transition-all ${
-                  idx === queueIndex && isPlaying
-                    ? 'border-opacity-50'
-                    : 'border-white/[0.05] bg-surface/50'
-                }`}
-                style={idx === queueIndex && isPlaying ? {
+                className="flex items-center gap-3 px-4 py-2.5 rounded-xl border transition-all"
+                style={idx === queueIndex ? {
                   background: `${item.group.color}10`,
                   borderColor: `${item.group.color}40`,
-                } : {}}
+                } : { borderColor: 'rgba(255,255,255,0.05)', background: 'rgba(255,255,255,0.02)' }}
               >
                 <span className="text-sm">{item.track.emoji}</span>
-                <span className="text-sm flex-1">
-                  {item.group.wave} · {item.track.genre}
-                </span>
+                <span className="text-sm flex-1">{item.group.wave} · {item.track.genre}</span>
                 {idx === queueIndex && isPlaying && (
                   <span className="text-xs" style={{ color: item.group.color }}>▶ ahora</span>
                 )}
-                <button
-                  onClick={() => removeFromQueue(idx)}
-                  className="text-muted hover:text-white transition-colors text-sm ml-1"
-                >
-                  ×
+                <button onClick={() => removeFromQueue(idx)} className="text-muted hover:text-white transition-colors">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                  </svg>
                 </button>
               </div>
             ))}
@@ -382,13 +422,11 @@ export default function DashboardPlayer({ isPro = false }: { isPro?: boolean }) 
                 color: openWave === g.wave ? g.color : '#6b7580',
               }}
             >
-              <span>{g.emoji}</span>
-              <span>{g.wave}</span>
+              <span>{g.emoji}</span><span>{g.wave}</span>
             </button>
           ))}
         </div>
 
-        {/* Header de onda con "Reproducir todo" */}
         <div className="flex items-center justify-between mb-3">
           <p className="text-xs text-muted">{currentGroup.useCase} · {currentGroup.binauralHz} Hz binaural</p>
           {isPro && (
@@ -402,7 +440,6 @@ export default function DashboardPlayer({ isPro = false }: { isPro?: boolean }) 
           )}
         </div>
 
-        {/* Tracks */}
         <div className="flex flex-col gap-3">
           {currentGroup.tracks.map((track) => {
             const isSelected = selected.has(track.id)
@@ -418,7 +455,6 @@ export default function DashboardPlayer({ isPro = false }: { isPro?: boolean }) 
                 }}
               >
                 <div className="flex items-center gap-4">
-                  {/* Checkbox */}
                   <button
                     onClick={() => toggleSelect(track, currentGroup)}
                     className="w-5 h-5 rounded flex items-center justify-center flex-shrink-0 transition-all"
@@ -446,25 +482,8 @@ export default function DashboardPlayer({ isPro = false }: { isPro?: boolean }) 
                     </p>
                   </div>
 
-                  {/* Play directo */}
                   <button
-                    onClick={() => {
-                      if (!isSelected) toggleSelect(track, currentGroup)
-                      const idx = queue.findIndex((i) => i.track.id === track.id)
-                      if (idx >= 0) {
-                        setQueueIndex(idx)
-                        playTrack(queue[idx])
-                      } else {
-                        const newItem = { track, group: currentGroup }
-                        const newQueue = [...queue, newItem]
-                        setQueue(newQueue)
-                        const newSelected = new Set(selected)
-                        newSelected.add(track.id)
-                        setSelected(newSelected)
-                        setQueueIndex(newQueue.length - 1)
-                        playTrack(newItem)
-                      }
-                    }}
+                    onClick={() => playDirectly(track, currentGroup)}
                     className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-105 flex-shrink-0"
                     style={{
                       background: isCurrent && isPlaying ? currentGroup.color : `${currentGroup.color}20`,
@@ -472,13 +491,13 @@ export default function DashboardPlayer({ isPro = false }: { isPro?: boolean }) 
                     }}
                   >
                     {isCurrent && isPlaying ? (
-                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                        <rect x="1" y="1" width="4" height="10" rx="1" fill="#080c10"/>
-                        <rect x="7" y="1" width="4" height="10" rx="1" fill="#080c10"/>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="#080c10">
+                        <rect x="6" y="4" width="4" height="16" rx="1"/>
+                        <rect x="14" y="4" width="4" height="16" rx="1"/>
                       </svg>
                     ) : (
-                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                        <path d="M2 1L11 6L2 11V1Z" fill={currentGroup.color}/>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill={currentGroup.color}>
+                        <path d="M5 3l14 9-14 9V3z"/>
                       </svg>
                     )}
                   </button>
