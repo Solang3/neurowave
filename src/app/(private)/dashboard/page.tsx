@@ -51,6 +51,8 @@ export default async function DashboardPage() {
           <p className="text-muted text-sm">{user.email}</p>
         </div>
 
+        <WavesPanel />
+
         {!isPro && (
           <div className="mb-10">
             <div className="flex items-center justify-between mb-5">
@@ -79,7 +81,6 @@ export default async function DashboardPage() {
         </div>
         )}
 
-        <WavesPanel />
 
       </div>
     </div>
