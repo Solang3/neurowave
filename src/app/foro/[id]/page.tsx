@@ -12,7 +12,8 @@ const WAVES: Record<string, { label: string; emoji: string; color: string }> = {
   gamma: { label: 'Gamma', emoji: '🧠', color: '#f0a8a8' },
 }
 
-export default async function PostPage({ params }: { params: { id: string } }) {
+export default async function PostPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -27,12 +28,12 @@ export default async function PostPage({ params }: { params: { id: string } }) {
   const { data: post, error: postError } = await supabase
   .from('posts')
   .select('id, title, content, wave, created_at, user_id')
-  .eq('id', params.id)
+  .eq('id', id)
   .single()
 
 console.log('post:', post)
 console.log('postError:', postError)
-console.log('params.id:', params.id)
+console.log('params.id:', id)
 
 if (!post) redirect('/foro')
 
@@ -49,7 +50,7 @@ if (!post) redirect('/foro')
   const { data: comments } = await supabase
     .from('comments')
     .select('id, content, created_at, user_id')
-    .eq('post_id', params.id)
+    .eq('post_id', id)
     .order('created_at', { ascending: true })
 
   // Perfiles de los autores de comentarios
