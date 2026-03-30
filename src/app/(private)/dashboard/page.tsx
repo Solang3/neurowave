@@ -53,35 +53,26 @@ export default async function DashboardPage() {
 
         <WavesPanel />
 
-        {!isPro && (
-          <div className="mb-10">
-            <div className="flex items-center justify-between mb-5">
-                <h2 className="font-serif text-2xl">Muestras gratuitas</h2>
-                <span className="text-xs text-muted">40 seg · Solo auriculares</span>
-            </div>
-            <DashboardPlayer isPro={false} />
-            <div className="mt-4 bg-surface border border-white/[0.07] rounded-xl p-4 flex items-center justify-between gap-4">
-              <p className="text-xs text-muted leading-relaxed">
-                Desbloqueá la biblioteca completa con más de 30 tracks y los protocolos del Dr. González
-              </p>
-              <Link href="/checkout?plan=monthly" className="flex-shrink-0 bg-accent text-bg text-xs font-medium px-4 py-2 rounded-full hover:opacity-90 transition-opacity">
-                Ver Pro
-              </Link>
-            </div>
-          </div>
-        )}
-
-        {isPro && (
         <div className="mb-10">
-            <div className="flex items-center justify-between mb-5">
-            <h2 className="font-serif text-2xl">Tu biblioteca Pro</h2>
-            <span className="text-xs text-accent border border-accent/20 px-3 py-1 rounded-full">✦ Pro</span>
-            </div>
-            <DashboardPlayer isPro={true} />
+        <div className="flex items-center justify-between mb-5">
+            <h2 className="font-serif text-2xl">Biblioteca de ondas</h2>
+            <span className="text-xs text-muted">🎧 Solo auriculares</span>
         </div>
-        )}
-
-
+        <DashboardPlayer isPro={true} />
+        <div className="mt-4 bg-surface border border-white/[0.07] rounded-xl p-4 flex items-center justify-between gap-4 flex-wrap">
+            <p className="text-xs text-muted leading-relaxed">
+            Seguinos en Spotify y YouTube para acceder a la biblioteca completa
+            </p>
+            <div className="flex items-center gap-2 flex-shrink-0">
+            <a href="#" target="_blank" className="text-xs font-medium px-4 py-2 rounded-full hover:opacity-90 transition-opacity" style={{ background: '#1DB954', color: '#000' }}>
+                Spotify
+            </a>
+            <a href="#" target="_blank" className="text-xs font-medium px-4 py-2 rounded-full hover:opacity-90 transition-opacity" style={{ background: '#FF0000', color: '#fff' }}>
+                YouTube
+            </a>
+            </div>
+        </div>
+        </div>
       </div>
     </div>
   )

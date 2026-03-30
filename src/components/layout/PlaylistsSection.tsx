@@ -213,17 +213,11 @@ export default function PlaylistsSection() {
         {/* CTA */}
         <div className="bg-bg border border-white/[0.07] rounded-2xl p-5 flex items-center justify-between gap-4 flex-wrap">
           <div>
-            <p className="font-medium text-sm">¿Querés escuchar completo?</p>
+            <p className="font-medium text-sm">¿Querés escuchar todos los temas?</p>
             <p className="text-xs text-muted mt-0.5">
-              Accedé a la biblioteca completa con Pro — canciones de 3 minutos, todas las ondas y géneros
+              Seguinos en Spotify y YouTube para acceder a la biblioteca completa de ondas binaurales
             </p>
           </div>
-          <a
-            href="/checkout?plan=monthly"
-            className="flex-shrink-0 bg-accent text-bg text-sm font-medium px-5 py-2.5 rounded-full hover:opacity-90 transition-opacity"
-          >
-            Ver Pro →
-          </a>
         </div>
 
         <p className="text-xs text-muted text-center mt-4">
