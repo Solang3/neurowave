@@ -138,9 +138,14 @@ export default function DashboardPlayer({ isPro = false }: { isPro?: boolean }) 
   }
 
   function formatTime(secs: number) {
-    const remaining = PREVIEW_SECONDS - secs
-    return `0:${remaining.toString().padStart(2, '0')}`
-  }
+    if (!isPro) {
+        const remaining = PREVIEW_SECONDS - secs
+        return `0:${Math.ceil(remaining).toString().padStart(2, '0')}`
+    }
+    const mins = Math.floor(secs / 60)
+    const s = Math.floor(secs % 60)
+    return `${mins}:${s.toString().padStart(2, '0')}`
+    }
 
   return (
     <div className="flex flex-col gap-4">
@@ -203,7 +208,7 @@ export default function DashboardPlayer({ isPro = false }: { isPro?: boolean }) 
                   </div>
 
                   <span className="text-xs text-muted font-mono w-10 text-right flex-shrink-0">
-                    {isPlaying ? formatTime(elapsedSecs) : `0:${PREVIEW_SECONDS}`}
+                    {isPlaying ? formatTime(elapsedSecs) : isPro ? '' : '0:20'}
                   </span>
 
                   <button
