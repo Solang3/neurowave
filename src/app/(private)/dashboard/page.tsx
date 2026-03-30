@@ -51,23 +51,6 @@ export default async function DashboardPage() {
           <p className="text-muted text-sm">{user.email}</p>
         </div>
 
-        <div className={`rounded-2xl p-6 mb-10 border ${isPro ? 'bg-accent/5 border-accent/20' : 'bg-surface border-white/[0.07]'}`}>
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div>
-              <p className="text-xs tracking-widest uppercase mb-1 font-medium" style={{ color: isPro ? '#a8f0c8' : '#6b7580' }}>
-                Plan actual
-              </p>
-              <p className="font-serif text-2xl">{isPro ? 'Pro ✦' : 'Gratuito'}</p>
-              {!isPro && <p className="text-xs text-muted mt-1">3 tracks de muestra · 20 segundos por track</p>}
-            </div>
-            {!isPro && (
-              <Link href="/checkout?plan=monthly" className="bg-accent text-bg text-sm font-medium px-5 py-2.5 rounded-full hover:opacity-90 transition-opacity">
-                Mejorar a Pro
-              </Link>
-            )}
-          </div>
-        </div>
-
         {!isPro && (
           <div className="mb-10">
             <div className="flex items-center justify-between mb-5">
