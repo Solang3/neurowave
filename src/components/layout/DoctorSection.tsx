@@ -48,10 +48,10 @@ export default function DoctorSection() {
               Como usuario
             </p>
             <p className="text-muted text-sm leading-relaxed">
-              El Dr. González usó clonazepam durante años para poder descansar.
-              Fue explorando las ondas binaurales por cuenta propia, leyó la
-              evidencia disponible, y pudo dejar la medicación. Quiere
-              compartir lo que encontró.
+              El Dr. González conoce de cerca el impacto de las benzodiazepinas y 
+              ansiolíticos — no solo desde la consulta, sino en primera persona. 
+              Investigó la evidencia científica disponible y encontró en las ondas 
+              binaurales una alternativa natural que cambió su descanso.
             </p>
           </div>
 
