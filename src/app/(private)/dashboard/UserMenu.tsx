@@ -60,6 +60,18 @@ export default function UserMenu({ email, fullName, username, avatarUrl, onSignO
           {/* Links */}
           <div className="p-1">
             <Link
+                href="/dashboard"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-muted hover:text-white hover:bg-white/5 transition-all"
+                >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M9 18V5l12-2v13"/>
+                    <circle cx="6" cy="18" r="3"/>
+                    <circle cx="18" cy="16" r="3"/>
+                </svg>
+                Mi biblioteca
+            </Link>
+            <Link
               href="/perfil"
               onClick={() => setOpen(false)}
               className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-muted hover:text-white hover:bg-white/5 transition-all"
