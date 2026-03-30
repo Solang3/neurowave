@@ -148,6 +148,30 @@ if (!post) redirect('/foro')
         </div>
       )}
 
+    {/* Tabs de ondas */}
+    <div className="flex gap-2 overflow-x-auto pb-2 mb-8">
+    {[
+        { id: 'general', label: 'Todos', emoji: '💬', color: '#ffffff' },
+        { id: 'delta', label: 'Delta', emoji: '🌙', color: '#c4a8f0' },
+        { id: 'theta', label: 'Theta', emoji: '🧘', color: '#a8f0c8' },
+        { id: 'alpha', label: 'Alpha', emoji: '🌊', color: '#7eb8f7' },
+        { id: 'beta', label: 'Beta', emoji: '⚡', color: '#f0e8a8' },
+        { id: 'gamma', label: 'Gamma', emoji: '🧠', color: '#f0a8a8' },
+    ].map((w) => (
+        <Link
+        key={w.id}
+        href={w.id === 'general' ? '/foro' : `/foro?wave=${w.id}`}
+        className="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full text-sm transition-all"
+        style={{
+            background: post.wave === w.id ? `${w.color}20` : 'transparent',
+            border: `1px solid ${post.wave === w.id ? w.color + '50' : 'rgba(255,255,255,0.07)'}`,
+            color: post.wave === w.id ? w.color : '#6b7580',
+        }}
+        >
+        {w.emoji} {w.label}
+        </Link>
+    ))}
+    </div>
       <div className={`max-w-2xl mx-auto px-6 ${!user ? 'pb-12' : 'py-12 pt-24'}`}>
 
         {/* Post */}

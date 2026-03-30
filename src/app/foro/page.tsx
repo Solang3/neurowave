@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 
 const WAVES = [
-  { id: 'general', label: 'General', emoji: '💬', color: '#ffffff' },
+  { id: 'general', label: 'Todos', emoji: '💬', color: '#ffffff' },
   { id: 'delta', label: 'Delta', emoji: '🌙', color: '#c4a8f0' },
   { id: 'theta', label: 'Theta', emoji: '🧘', color: '#a8f0c8' },
   { id: 'alpha', label: 'Alpha', emoji: '🌊', color: '#7eb8f7' },
@@ -32,9 +32,9 @@ export default async function ForoPage({
     .select('id, title, content, wave, created_at, user_id')
     .order('created_at', { ascending: false })
 
-  if (activeWave !== 'todos') {
+  if (activeWave !== 'general') {
     postsQuery = postsQuery.eq('wave', activeWave)
-  }
+    }
 
   const { data: posts } = await postsQuery
 

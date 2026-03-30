@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 
 const WAVES = [
-  { id: 'general', label: 'General', emoji: '💬' },
+  { id: 'general', label: 'Todos', emoji: '💬' },
   { id: 'delta', label: 'Delta', emoji: '🌙' },
   { id: 'theta', label: 'Theta', emoji: '🧘' },
   { id: 'alpha', label: 'Alpha', emoji: '🌊' },
