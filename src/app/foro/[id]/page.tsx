@@ -61,7 +61,7 @@ export default async function PostPage({ params }: { params: { id: string } }) {
     {user ? (
       <>
         <Link href="/dashboard" className="text-sm text-muted hover:text-white transition-colors hidden md:block">
-          Mis playlists
+          Mi biblioteca
         </Link>
         <Link href="/perfil" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
           {profile?.avatar_url ? (

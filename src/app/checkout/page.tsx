@@ -157,7 +157,7 @@ function CheckoutContent() {
 
         <div className="flex items-center justify-center mt-4">
           <Link href="/dashboard" className="text-xs text-muted hover:text-white transition-colors">
-            ← Volver al dashboard
+            ← Volver al Mi biblioteca
           </Link>
         </div>
       </div>

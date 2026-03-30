@@ -52,7 +52,7 @@ export default async function ForoPage({
         <div className="flex items-center gap-4">
           {user ? (
             <Link href="/dashboard" className="text-sm text-muted hover:text-white transition-colors">
-              Dashboard
+              Mi biblioteca
             </Link>
           ) : (
             <Link href="/login" className="text-sm text-muted hover:text-white transition-colors">
