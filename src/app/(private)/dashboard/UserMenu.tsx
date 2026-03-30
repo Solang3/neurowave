@@ -8,10 +8,11 @@ interface Props {
   fullName: string | null
   username: string | null
   avatarUrl: string | null
+  role: string | null
   onSignOut: () => void
 }
 
-export default function UserMenu({ email, fullName, username, avatarUrl, onSignOut }: Props) {
+export default function UserMenu({ email, fullName, username, avatarUrl, role, onSignOut }: Props) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -59,6 +60,19 @@ export default function UserMenu({ email, fullName, username, avatarUrl, onSignO
 
           {/* Links */}
           <div className="p-1">
+            {role === 'admin' && (
+            <Link
+                href="/admin"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-white/5 transition-all"
+                style={{ color: '#f0a8a8' }}
+            >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                Panel de admin
+            </Link>
+            )}
             <Link
                 href="/dashboard"
                 onClick={() => setOpen(false)}

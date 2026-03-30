@@ -18,7 +18,7 @@ export default async function DashboardPage() {
 
   const { data: profile } = await supabase
   .from('profiles')
-  .select('full_name, username, avatar_url')
+  .select('full_name, username, avatar_url, role')
   .eq('id', user.id)
   .single()
 
@@ -38,11 +38,12 @@ export default async function DashboardPage() {
             Neuro<span className="text-accent">Wave</span>
         </Link>
         <UserMenu
-            email={user.email!}
-            fullName={profile?.full_name ?? null}
-            username={profile?.username ?? null}
-            avatarUrl={profile?.avatar_url ?? null}
-            onSignOut={signOut}
+        email={user.email!}
+        fullName={profile?.full_name ?? null}
+        username={profile?.username ?? null}
+        avatarUrl={profile?.avatar_url ?? null}
+        role={profile?.role ?? null}
+        onSignOut={signOut}
         />
       </nav>
 
