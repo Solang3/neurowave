@@ -18,7 +18,7 @@ export default async function AdminPage() {
   // Traer profiles
   const { data: users } = await adminClient
     .from('profiles')
-    .select('id, full_name, created_at')
+    .select('id, full_name, username, created_at, role')
     .order('created_at', { ascending: false })
 
   // Traer suscripciones por separado
@@ -39,6 +39,7 @@ export default async function AdminPage() {
       last_sign_in: authUser?.last_sign_in_at ?? null,
       provider: authUser?.app_metadata?.provider || 'email',
       subscriptions: subscription ? [subscription] : [],
+      role: profile.role || 'user',
     }
   })
 
