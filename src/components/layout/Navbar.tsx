@@ -6,8 +6,7 @@ import Link from 'next/link'
 const links = [
   { href: '#ondas', label: 'Las ondas' },
   { href: '#ciencia', label: 'Ciencia' },
-  { href: '#playlists', label: 'Playlists' },
-  { href: '#precios', label: 'Precios' },
+  { href: '#playlists', label: 'Playlists' }
 ]
 
 export default function Navbar() {
