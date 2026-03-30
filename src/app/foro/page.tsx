@@ -13,11 +13,12 @@ const WAVES = [
 export default async function ForoPage({
   searchParams,
 }: {
-  searchParams: { wave?: string }
+  searchParams: { wave?: string; user?: string }
 }) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   const activeWave = searchParams.wave || 'general'
+  const activeUser = searchParams.user
 
   // Perfil del usuario logueado
   const { data: profile } = user ? await supabase
@@ -35,6 +36,10 @@ export default async function ForoPage({
   if (activeWave !== 'general') {
     postsQuery = postsQuery.eq('wave', activeWave)
     }
+
+  if (activeUser) {
+    postsQuery = postsQuery.eq('user_id', activeUser)
+  }
 
   const { data: posts } = await postsQuery
 
@@ -108,6 +113,13 @@ export default async function ForoPage({
       </nav>
 
       <div className="max-w-4xl mx-auto px-6 md:px-8 pt-24 pb-12">
+
+        {activeUser && (
+        <div className="bg-surface border border-white/[0.07] rounded-xl px-4 py-3 flex items-center justify-between mb-6">
+            <p className="text-sm text-muted">Mostrando posts de un usuario específico</p>
+            <Link href="/foro" className="text-xs text-accent hover:underline">Ver todos</Link>
+        </div>
+        )}
 
         {/* Banner no logueado */}
         {!user && (
