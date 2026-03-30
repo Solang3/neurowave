@@ -10,36 +10,37 @@ export default async function AdminPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user || user.email !== ADMIN_EMAIL) redirect('/')
 
-  // Usar admin client para saltear RLS
   const adminClient = createAdminClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   )
 
-  // Traer todos los usuarios con sus suscripciones usando admin client
-  const { data: users, error } = await adminClient
-  .from('profiles')
-  .select('id, full_name, created_at')
-  .order('created_at', { ascending: false })
+  // Traer profiles
+  const { data: users } = await adminClient
+    .from('profiles')
+    .select('id, full_name, created_at')
+    .order('created_at', { ascending: false })
+
+  // Traer suscripciones por separado
+  const { data: subscriptions } = await adminClient
+    .from('subscriptions')
+    .select('user_id, status, provider, currency, current_period_end')
 
   // Traer emails de auth.users
   const { data: authUsers } = await adminClient.auth.admin.listUsers()
 
-  // Combinar profiles con emails
+  // Combinar todo
   const usersWithEmail = (users || []).map((profile) => {
     const authUser = authUsers?.users?.find((u) => u.id === profile.id)
+    const subscription = subscriptions?.find((s) => s.user_id === profile.id)
     return {
       ...profile,
       email: authUser?.email || 'Sin email',
       last_sign_in: authUser?.last_sign_in_at ?? null,
       provider: authUser?.app_metadata?.provider || 'email',
+      subscriptions: subscription ? [subscription] : [],
     }
   })
-
-  // DEBUG — borrá esto después
-  console.log('users error:', error)
-  console.log('users count:', users?.length)
-
 
   return <AdminPanel users={usersWithEmail} />
 }
