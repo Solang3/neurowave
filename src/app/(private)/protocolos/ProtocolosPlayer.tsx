@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
+import { useAudio } from '@/context/AudioContext'
 
 const R2_PUBLIC = 'https://pub-78c976d8802a412ca89533a0734f5054.r2.dev'
 const PREVIEW_SECONDS = 30
@@ -32,6 +33,7 @@ export default function ProtocolosPlayer({ playlist, isLoggedIn }: { playlist: P
   const [elapsed, setElapsed] = useState(0)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
+  const { playQueue, currentTrack, isPlaying, togglePlay } = useAudio()
 
   useEffect(() => {
     return () => {
@@ -84,6 +86,21 @@ export default function ProtocolosPlayer({ playlist, isLoggedIn }: { playlist: P
     }, 250)
   }
 
+  function handlePlayAll() {
+    const tracks = playlist.tracks.map((track, idx) => ({
+      id: `${playlist.id}-${idx}`,
+      title: track.title || `${track.wave} · ${track.genre}`,
+      wave: track.wave || '',
+      genre: track.genre,
+      emoji: track.emoji,
+      path: track.path,
+      color: track.color || '#a8f0c8',
+      binauralHz: track.binauralHz,
+      playlistTitle: playlist.title,
+    }))
+    playQueue(tracks, 0)
+  }
+
   const totalMinutes = playlist.tracks.length * 10
 
   return (
@@ -104,6 +121,17 @@ export default function ProtocolosPlayer({ playlist, isLoggedIn }: { playlist: P
             </div>
           </div>
         </div>
+        <button
+            onClick={(e) => { e.stopPropagation(); handlePlayAll() }}
+            className="text-xs px-4 py-2 rounded-full font-medium transition-all hover:opacity-90 flex-shrink-0"
+            style={{
+              background: `${playlist.tracks[0]?.color || '#a8f0c8'}20`,
+              color: playlist.tracks[0]?.color || '#a8f0c8',
+              border: `1px solid ${playlist.tracks[0]?.color || '#a8f0c8'}30`
+            }}
+          >
+            ▶ Reproducir
+        </button>
         <span className="text-muted mt-1">{isExpanded ? '▲' : '▼'}</span>
       </button>
 
