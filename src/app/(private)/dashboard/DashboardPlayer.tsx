@@ -397,7 +397,7 @@ export default function DashboardPlayer({ isPro = false }: { isPro?: boolean }) 
                 } : { borderColor: 'rgba(255,255,255,0.05)', background: 'rgba(255,255,255,0.02)' }}
               >
                 <span className="text-sm">{item.track.emoji}</span>
-                <span className="text-sm flex-1">{item.group.wave} · {item.track.genre}</span>
+                <span className="text-sm flex-1">{item.track.title || `${item.group.wave} · ${item.track.genre}`}</span>
                 {idx === queueIndex && isPlaying && (
                   <span className="text-xs" style={{ color: item.group.color }}>▶ ahora</span>
                 )}
