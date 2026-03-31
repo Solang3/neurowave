@@ -215,10 +215,18 @@ export default function PlaylistsSection() {
           <div>
             <p className="font-medium text-sm">¿Querés escuchar todos los temas?</p>
             <p className="text-xs text-muted mt-0.5">
-              Seguinos en Spotify y YouTube para acceder a la biblioteca completa de ondas binaurales
+              Registrate gratis y accedé a la biblioteca completa de pistas binaurales, con nuevas playlists cada mes.
+            </p>
+          <a
+            href="/registro"
+            className="text-sm font-medium px-5 py-3 rounded-full bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent/70 transition-all"
+          >
+            Registrarse gratis
+          </a>
             </p>
           </div>
         </div>
+          
 
         <p className="text-xs text-muted text-center mt-4">
           🎧 Requiere auriculares estéreo para el efecto binaural completo
