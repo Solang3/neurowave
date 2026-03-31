@@ -95,6 +95,9 @@ export default function AdminPanel({ users }: { users: User[] }) {
         </Link>
         <div className="flex items-center gap-4">
           <Link href="/foro" className="text-sm text-muted hover:text-white transition-colors">Foro</Link>
+          <Link href="/admin/protocolos" className="text-sm text-muted hover:text-white transition-colors">
+            Protocolos
+          </Link>
           <span className="text-xs text-accent border border-accent/20 px-3 py-1 rounded-full">Admin</span>
         </div>
       </nav>
