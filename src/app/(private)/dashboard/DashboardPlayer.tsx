@@ -9,7 +9,6 @@ const WAVE_GROUPS = [
     wave: 'Delta', freq: '0.5–4 Hz', binauralHz: 2,
     color: '#c4a8f0', bg: 'rgba(196,168,240,0.08)', emoji: '🌙', useCase: 'Sueño profundo',
     tracks: [
-      { id: 'delta-nature-001', genre: 'Nature', emoji: '🌿', path: 'delta/nature/Delta-nature-001-binaural.mp3' },
       { id: 'delta-nature-amanecer', genre: 'Nature', emoji: '🌿', path: 'delta/nature/Delta-nature-Amanecer en el Bosque-binaural.mp3' },
       { id: 'delta-nature-arroyo', genre: 'Nature', emoji: '🌿', path: 'delta/nature/Delta-nature-El Arroyo y el Viento-binaural.mp3' },
       { id: 'delta-nature-tormenta-acerca', genre: 'Nature', emoji: '🌿', path: 'delta/nature/Delta-nature-La Tormenta se Acerca-binaural.mp3' },
