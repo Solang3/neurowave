@@ -136,40 +136,62 @@ export default function DashboardPlayer({ isPro = false }: { isPro?: boolean }) 
 
     setQueueIndex(next)
     queueIndexRef.current = next
-    loadAndPlay(q[next])
+    loadAndPlay(q[next], true) 
   }
 
-  async function loadAndPlay(item: QueueItem) {
-    audioRef.current?.pause()
+  async function loadAndPlay(item: QueueItem, withFade = false) {
+    const previousAudio = audioRef.current
     stopTimer()
     setLoading(true)
     setElapsed(0)
     setDuration(0)
 
     try {
-      let url: string
-      if (isPro) {
+        let url: string
+        if (isPro) {
         const res = await fetch(`/api/audio?path=${encodeURIComponent(item.track.path)}`)
         const data = await res.json()
         url = data.url
-      } else {
+        } else {
         url = `${R2_PUBLIC}/${item.track.path}`
-      }
+        }
 
-      const audio = new Audio(url)
-      audio.volume = 0.8
-      audioRef.current = audio
-      audio.onended = () => advanceQueue()
-      audio.onloadedmetadata = () => setDuration(audio.duration)
-      await audio.play()
-      setIsPlaying(true)
-      startTimer(audio)
+        const audio = new Audio(url)
+        audio.volume = withFade ? 0 : 0.8  // empieza en 0 si hay crossfade
+        audioRef.current = audio
+        audio.onended = () => advanceQueue()
+        audio.onloadedmetadata = () => setDuration(audio.duration)
+        await audio.play()
+        setIsPlaying(true)
+        startTimer(audio)
+
+        if (withFade && previousAudio) {
+        // Fade out del track anterior y fade in del nuevo — 3 segundos
+        const FADE_DURATION = 3000
+        const STEPS = 30
+        const interval = FADE_DURATION / STEPS
+        let step = 0
+
+        const fadeInterval = setInterval(() => {
+            step++
+            const progress = step / STEPS
+            if (previousAudio) previousAudio.volume = Math.max(0, 0.8 * (1 - progress))
+            audio.volume = Math.min(0.8, 0.8 * progress)
+            if (step >= STEPS) {
+            clearInterval(fadeInterval)
+            previousAudio?.pause()
+            }
+        }, interval)
+        } else {
+        previousAudio?.pause()
+        }
+
     } catch {
-      console.error('Error reproduciendo')
+        console.error('Error reproduciendo')
     } finally {
-      setLoading(false)
+        setLoading(false)
     }
-  }
+    }
 
   function handlePlayPause() {
     const audio = audioRef.current
@@ -200,7 +222,7 @@ export default function DashboardPlayer({ isPro = false }: { isPro?: boolean }) 
     const prev = idx > 0 ? idx - 1 : loopRef.current ? q.length - 1 : 0
     setQueueIndex(prev)
     queueIndexRef.current = prev
-    loadAndPlay(q[prev])
+    loadAndPlay(q[prev],true )
   }
 
   function toggleSelect(track: Track, group: Group) {
@@ -302,10 +324,23 @@ export default function DashboardPlayer({ isPro = false }: { isPro?: boolean }) 
             </span>
           </div>
 
-          <div className="h-1 bg-white/10 rounded-full overflow-hidden mb-4">
-            <div className="h-full rounded-full transition-all duration-200"
-              style={{ width: `${Math.min(progressPct, 100)}%`, background: currentItem.group.color }} />
-          </div>
+          <div
+            className="h-1 bg-white/10 rounded-full mb-4 cursor-pointer relative"
+            onClick={(e) => {
+                const audio = audioRef.current
+                if (!audio || !duration) return
+                const rect = e.currentTarget.getBoundingClientRect()
+                const percent = (e.clientX - rect.left) / rect.width
+                const newTime = isPro ? percent * duration : Math.min(percent * duration, PREVIEW_SECONDS)
+                audio.currentTime = newTime
+                setElapsed(newTime)
+            }}
+            >
+            <div
+                className="h-full rounded-full"
+                style={{ width: `${Math.min(progressPct, 100)}%`, background: currentItem.group.color }}
+            />
+            </div>
 
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1">
