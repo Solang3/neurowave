@@ -7,6 +7,7 @@ const links = [
   { href: '#ondas', label: 'Las ondas' },
   { href: '#ciencia', label: 'Ciencia' },
   { href: '#playlists', label: 'Playlists' },
+  { href: '/protocolos', label: 'Protocolos' },
   { href: '/foro', label: 'Foro' },
 ]
 
