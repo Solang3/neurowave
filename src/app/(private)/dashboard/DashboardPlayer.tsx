@@ -9,53 +9,53 @@ const WAVE_GROUPS = [
     wave: 'Delta', freq: '0.5–4 Hz', binauralHz: 2,
     color: '#c4a8f0', bg: 'rgba(196,168,240,0.08)', emoji: '🌙', useCase: 'Sueño profundo',
     tracks: [
-      { id: 'delta-nature-001', genre: 'Nature', emoji: '🌿', path: 'delta/nature/Delta-nature-Amanecer en el Bosque-binaural.mp3' },
-      { id: 'delta-nature-002', genre: 'Nature', emoji: '🌿', path: 'delta/nature/Delta-nature-El Arroyo y el Viento-binaural.mp3' },
-      { id: 'delta-nature-003', genre: 'Nature', emoji: '🌿', path: 'delta/nature/Delta-nature-La Tormenta se Acerca-binaural.mp3' },
-      { id: 'delta-nature-004', genre: 'Nature', emoji: '🌿', path: 'delta/nature/Delta-nature-La Tormenta-binaural.mp3' },
-      { id: 'delta-nature-005', genre: 'Nature', emoji: '🌿', path: 'delta/nature/Delta-nature-La Tormenta se Va-binaural.mp3' },
-      { id: 'delta-nature-006', genre: 'Nature', emoji: '🌿', path: 'delta/nature/Delta-nature-Regreso al Amanecer-binaural.mp3' },
+      { id: 'delta-nature-001', genre: 'Nature', emoji: '🌿', title: 'Amanecer en el Bosque', path: 'delta/nature/Delta-nature-Amanecer en el Bosque-binaural.mp3' },
+      { id: 'delta-nature-002', genre: 'Nature', emoji: '🌿', title: 'El Arroyo y el Viento', path: 'delta/nature/Delta-nature-El Arroyo y el Viento-binaural.mp3' },
+      { id: 'delta-nature-003', genre: 'Nature', emoji: '🌿', title: 'La Tormenta se Acerca', path: 'delta/nature/Delta-nature-La Tormenta se Acerca-binaural.mp3' },
+      { id: 'delta-nature-004', genre: 'Nature', emoji: '🌿', title: 'La Tormenta', path: 'delta/nature/Delta-nature-La Tormenta-binaural.mp3' },
+      { id: 'delta-nature-005', genre: 'Nature', emoji: '🌿', title: 'La Tormenta se Va', path: 'delta/nature/Delta-nature-La Tormenta se Va-binaural.mp3' },
+      { id: 'delta-nature-006', genre: 'Nature', emoji: '🌿', title: 'Regreso al Amanecer', path: 'delta/nature/Delta-nature-Regreso al Amanecer-binaural.mp3' },
     ],
   },
   {
     wave: 'Theta', freq: '4–8 Hz', binauralHz: 6,
     color: '#a8f0c8', bg: 'rgba(168,240,200,0.08)', emoji: '🧘', useCase: 'Meditación y ansiedad',
     tracks: [
-      { id: 'theta-nature', genre: 'Nature', emoji: '🌿', path: 'theta/nature/Theta-nature-001-binaural.mp3' },
-      { id: 'theta-classic', genre: 'Classic', emoji: '🎻', path: 'theta/classic/Theta-classic-001-binaural.mp3' },
-      { id: 'theta-ambient', genre: 'Ambient', emoji: '🌌', path: 'theta/ambient/Theta-ambient-001-binaural.mp3' },
+      { id: 'theta-nature', genre: 'Nature', emoji: '🌿', title: 'Meditación en la Naturaleza', path: 'theta/nature/Theta-nature-001-binaural.mp3' },
+      { id: 'theta-classic', genre: 'Classic', emoji: '🎻', title: 'Música Clásica', path: 'theta/classic/Theta-classic-001-binaural.mp3' },
+      { id: 'theta-ambient', genre: 'Ambient', emoji: '🌌', title: 'Ambiente Cósmico', path: 'theta/ambient/Theta-ambient-001-binaural.mp3' },
     ],
   },
   {
     wave: 'Alpha', freq: '8–13 Hz', binauralHz: 10,
     color: '#7eb8f7', bg: 'rgba(126,184,247,0.08)', emoji: '🌊', useCase: 'Relajación activa',
     tracks: [
-      { id: 'alpha-nature', genre: 'Nature', emoji: '🌿', path: 'alpha/nature/Alpha-nature-001-binaural.mp3' },
-      { id: 'alpha-classic', genre: 'Classic', emoji: '🎻', path: 'alpha/classic/Alpha-classic-001-binaural.mp3' },
-      { id: 'alpha-ambient', genre: 'Ambient', emoji: '🌌', path: 'alpha/ambient/Alpha-ambient-001-binaural.mp3' },
+      { id: 'alpha-nature', genre: 'Nature', emoji: '🌿', title: 'Naturaleza en Calma', path: 'alpha/nature/Alpha-nature-001-binaural.mp3' },
+      { id: 'alpha-classic', genre: 'Classic', emoji: '🎻', title: 'Música Clásica', path: 'alpha/classic/Alpha-classic-001-binaural.mp3' },
+      { id: 'alpha-ambient', genre: 'Ambient', emoji: '🌌', title: 'Ambiente Cósmico', path: 'alpha/ambient/Alpha-ambient-001-binaural.mp3' },
     ],
   },
   {
     wave: 'Beta', freq: '13–30 Hz', binauralHz: 15,
     color: '#f0e8a8', bg: 'rgba(240,232,168,0.08)', emoji: '⚡', useCase: 'Foco y trabajo',
     tracks: [
-      { id: 'beta-nature', genre: 'Nature', emoji: '🌿', path: 'beta/nature/Beta-nature-001-binaural.mp3' },
-      { id: 'beta-classic', genre: 'Classic', emoji: '🎻', path: 'beta/classic/Beta-classic-001-binaural.mp3' },
-      { id: 'beta-ambient', genre: 'Ambient', emoji: '🌌', path: 'beta/ambient/Beta-ambient-001-binaural.mp3' },
+      { id: 'beta-nature', genre: 'Nature', emoji: '🌿', title: 'Naturaleza en Calma', path: 'beta/nature/Beta-nature-001-binaural.mp3' },
+      { id: 'beta-classic', genre: 'Classic', emoji: '🎻', title: 'Música Clásica', path: 'beta/classic/Beta-classic-001-binaural.mp3' },
+      { id: 'beta-ambient', genre: 'Ambient', emoji: '🌌', title: 'Ambiente Cósmico', path: 'beta/ambient/Beta-ambient-001-binaural.mp3' },
     ],
   },
   {
     wave: 'Gamma', freq: '30–100 Hz', binauralHz: 40,
     color: '#f0a8a8', bg: 'rgba(240,168,168,0.08)', emoji: '🧠', useCase: 'Alto rendimiento',
     tracks: [
-      { id: 'gamma-nature', genre: 'Nature', emoji: '🌿', path: 'gamma/nature/Gamma-nature-001-binaural.mp3' },
-      { id: 'gamma-classic', genre: 'Classic', emoji: '🎻', path: 'gamma/classic/Gamma-classic-001-binaural.mp3' },
-      { id: 'gamma-ambient', genre: 'Ambient', emoji: '🌌', path: 'gamma/ambient/Gamma-ambient-001-binaural.mp3' },
+      { id: 'gamma-nature', genre: 'Nature', emoji: '🌿', title: 'Naturaleza en Calma', path: 'gamma/nature/Gamma-nature-001-binaural.mp3' },
+      { id: 'gamma-classic', genre: 'Classic', emoji: '🎻', title: 'Música Clásica', path: 'gamma/classic/Gamma-classic-001-binaural.mp3' },
+      { id: 'gamma-ambient', genre: 'Ambient', emoji: '🌌', title: 'Ambiente Cósmico', path: 'gamma/ambient/Gamma-ambient-001-binaural.mp3' },
     ],
   },
 ]
 
-type Track = { id: string; genre: string; emoji: string; path: string }
+type Track = { id: string; title: string; genre: string; emoji: string; path: string }
 type Group = typeof WAVE_GROUPS[0]
 interface QueueItem { track: Track; group: Group }
 
@@ -291,6 +291,7 @@ export default function DashboardPlayer({ isPro = false }: { isPro?: boolean }) 
           <div className="flex items-center gap-3 mb-3">
             <span className="text-2xl">{currentItem.track.emoji}</span>
             <div className="flex-1 min-w-0">
+              <p className="font-medium text-sm truncate">{currentItem.track.title}</p>
               <p className="font-medium text-sm truncate">{currentItem.group.wave} · {currentItem.track.genre}</p>
               <p className="text-xs mt-0.5" style={{ color: currentItem.group.color }}>
                 {currentItem.group.binauralHz} Hz binaural · {isPro ? 'completa' : 'muestra 20s'}
@@ -479,6 +480,7 @@ export default function DashboardPlayer({ isPro = false }: { isPro?: boolean }) 
                   </div>
 
                   <div className="flex-1 min-w-0">
+                    <p className="font-medium text-sm">{track.title}</p>
                     <p className="font-medium text-sm">{currentGroup.wave} · {track.genre}</p>
                     <p className="text-xs mt-0.5" style={{ color: currentGroup.color }}>
                       {currentGroup.binauralHz} Hz binaural · {isPro ? 'completa' : 'muestra 20s'}
