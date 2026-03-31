@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import Navbar from '@/components/layout/Navbar'
 import CommentForm from './CommentForm'
 
 const WAVES: Record<string, { label: string; emoji: string; color: string }> = {
@@ -17,56 +18,49 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  // Perfil del usuario logueado
   const { data: profile } = user ? await supabase
     .from('profiles')
     .select('full_name, username, avatar_url, role')
     .eq('id', user.id)
     .maybeSingle() : { data: null }
 
-  // Post sin join
-  const { data: post, error: postError } = await supabase
-  .from('posts')
-  .select('id, title, content, wave, created_at, user_id')
-  .eq('id', id)
-  .single()
+  const navUser = user ? {
+    email: user.email!,
+    fullName: profile?.full_name,
+    username: profile?.username,
+    avatarUrl: profile?.avatar_url,
+    role: profile?.role,
+  } : null
 
-console.log('post:', post)
-console.log('postError:', postError)
-console.log('params.id:', id)
-
-if (!post) redirect('/foro')
+  const { data: post } = await supabase
+    .from('posts')
+    .select('id, title, content, wave, created_at, user_id')
+    .eq('id', id)
+    .single()
 
   if (!post) redirect('/foro')
 
-  // Perfil del autor del post
   const { data: author } = await supabase
     .from('profiles')
     .select('full_name, username, avatar_url')
-    .eq('id', post.user_id)
+    .eq('id', post!.user_id)
     .maybeSingle()
 
-  // Comentarios sin join
   const { data: comments } = await supabase
     .from('comments')
     .select('id, content, created_at, user_id')
     .eq('post_id', id)
     .order('created_at', { ascending: true })
 
-  // Perfiles de los autores de comentarios
   const commentUserIds = [...new Set(comments?.map((c) => c.user_id) || [])]
   const { data: commentProfiles } = commentUserIds.length > 0 ? await supabase
-    .from('profiles')
-    .select('id, full_name, username, avatar_url')
-    .in('id', commentUserIds) : { data: [] }
+    .from('profiles').select('id, full_name, username, avatar_url').in('id', commentUserIds) : { data: [] }
 
-  const waveData = WAVES[post.wave] || WAVES.general
+  const waveData = WAVES[post!.wave] || WAVES.general
   const isAdmin = profile?.role === 'admin'
 
   function formatDate(date: string) {
-    return new Date(date).toLocaleDateString('es-AR', {
-      day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
-    })
+    return new Date(date).toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
   }
 
   function getDisplayName(p: { full_name?: string | null; username?: string | null } | null) {
@@ -90,47 +84,11 @@ if (!post) redirect('/foro')
 
   return (
     <div className="min-h-screen bg-bg">
-      {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.07] bg-bg/95 backdrop-blur-xl px-6 md:px-12 py-4 flex items-center justify-between">
-        <Link href="/" className="font-serif text-xl">
-          Neuro<span className="text-accent">Wave</span>
-        </Link>
-        <ul className="hidden md:flex gap-8 list-none">
-          <li><Link href="/#ondas" className="text-sm text-muted hover:text-white transition-colors">Las ondas</Link></li>
-          <li><Link href="/#ciencia" className="text-sm text-muted hover:text-white transition-colors">Ciencia</Link></li>
-          <li><Link href="/#playlists" className="text-sm text-muted hover:text-white transition-colors">Playlists</Link></li>
-          <li><Link href="/foro" className="text-sm text-white">Foro</Link></li>
-        </ul>
-        <div className="flex items-center gap-4">
-          {user ? (
-            <>
-              <Link href="/dashboard" className="text-sm text-muted hover:text-white transition-colors hidden md:block">
-                Mi biblioteca
-              </Link>
-              <Link href="/perfil" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                {profile?.avatar_url ? (
-                  <img src={profile.avatar_url} alt="Avatar" className="w-8 h-8 rounded-full object-cover border border-white/10" />
-                ) : (
-                  <div className="w-8 h-8 rounded-full bg-accent/20 border border-accent/30 flex items-center justify-center">
-                    <span className="text-xs font-medium text-accent">
-                      {profile?.full_name?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase()}
-                    </span>
-                  </div>
-                )}
-              </Link>
-            </>
-          ) : (
-            <Link href="/login" className="text-sm text-muted hover:text-white transition-colors">
-              Iniciar sesión
-            </Link>
-          )}
-        </div>
-      </nav>
+      <Navbar user={navUser} />
 
-      {/* Banner no logueado */}
       {!user && (
         <div className="pt-20 px-6 max-w-2xl mx-auto">
-          <div className="bg-accent/5 border border-accent/20 rounded-2xl p-4 flex items-center justify-between gap-4 mb-6">
+          <div className="bg-accent/5 border border-accent/20 rounded-2xl p-4 flex items-center justify-between gap-4 mb-6 flex-wrap">
             <div className="flex items-center gap-3">
               <span className="text-xl">👋</span>
               <div>
@@ -140,59 +98,46 @@ if (!post) redirect('/foro')
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
               <Link href="/login" className="text-xs text-muted hover:text-white transition-colors px-3 py-2">Iniciar sesión</Link>
-              <Link href="/registro" className="bg-accent text-bg text-xs font-medium px-4 py-2 rounded-full hover:opacity-90 transition-opacity">
-                Registrate gratis
-              </Link>
+              <Link href="/registro" className="bg-accent text-bg text-xs font-medium px-4 py-2 rounded-full hover:opacity-90 transition-opacity">Registrate gratis</Link>
             </div>
           </div>
         </div>
       )}
 
-    {/* Tabs de ondas */}
-    <div className="flex gap-2 overflow-x-auto pb-2 mb-8">
-    {[
-        { id: 'general', label: 'Todos', emoji: '💬', color: '#ffffff' },
-        { id: 'delta', label: 'Delta', emoji: '🌙', color: '#c4a8f0' },
-        { id: 'theta', label: 'Theta', emoji: '🧘', color: '#a8f0c8' },
-        { id: 'alpha', label: 'Alpha', emoji: '🌊', color: '#7eb8f7' },
-        { id: 'beta', label: 'Beta', emoji: '⚡', color: '#f0e8a8' },
-        { id: 'gamma', label: 'Gamma', emoji: '🧠', color: '#f0a8a8' },
-    ].map((w) => (
-        <Link
-        key={w.id}
-        href={w.id === 'general' ? '/foro' : `/foro?wave=${w.id}`}
-        className="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full text-sm transition-all"
-        style={{
-            background: post.wave === w.id ? `${w.color}20` : 'transparent',
-            border: `1px solid ${post.wave === w.id ? w.color + '50' : 'rgba(255,255,255,0.07)'}`,
-            color: post.wave === w.id ? w.color : '#6b7580',
-        }}
-        >
-        {w.emoji} {w.label}
-        </Link>
-    ))}
-    </div>
-      <div className={`max-w-2xl mx-auto px-6 ${!user ? 'pb-12' : 'py-12 pt-24'}`}>
+      {/* Tabs de ondas */}
+      <div className={`max-w-2xl mx-auto px-6 ${!user ? 'pt-4' : 'pt-24'}`}>
+        <div className="flex gap-2 overflow-x-auto pb-2 mb-8">
+          {Object.entries(WAVES).map(([wid, w]) => (
+            <Link
+              key={wid}
+              href={wid === 'general' ? '/foro' : `/foro?wave=${wid}`}
+              className="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full text-sm transition-all"
+              style={{
+                background: post!.wave === wid ? `${w.color}20` : 'transparent',
+                border: `1px solid ${post!.wave === wid ? w.color + '50' : 'rgba(255,255,255,0.07)'}`,
+                color: post!.wave === wid ? w.color : '#6b7580',
+              }}
+            >
+              {w.emoji} {w.label}
+            </Link>
+          ))}
+        </div>
+      </div>
 
+      <div className="max-w-2xl mx-auto px-6 pb-12">
         {/* Post */}
         <div className="mb-8">
           <div className="flex items-start justify-between gap-4 mb-4">
-            <span
-              className="text-xs px-2 py-0.5 rounded-full inline-block"
-              style={{ background: `${waveData.color}20`, color: waveData.color, border: `1px solid ${waveData.color}30` }}
-            >
+            <span className="text-xs px-2 py-0.5 rounded-full inline-block"
+              style={{ background: `${waveData.color}20`, color: waveData.color, border: `1px solid ${waveData.color}30` }}>
               {waveData.emoji} {waveData.label}
             </span>
             {isAdmin && (
               <form action={deletePost}>
-                <button
-                  type="submit"
-                  className="text-xs text-muted hover:text-red-400 transition-colors flex items-center gap-1"
-                  onClick={(e) => { if (!confirm('¿Borrar este post?')) e.preventDefault() }}
-                >
+                <button type="submit" className="text-xs text-muted hover:text-red-400 transition-colors flex items-center gap-1"
+                  onClick={(e) => { if (!confirm('¿Borrar este post?')) e.preventDefault() }}>
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <polyline points="3 6 5 6 21 6"/>
-                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                    <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
                   </svg>
                   Borrar post
                 </button>
@@ -200,7 +145,7 @@ if (!post) redirect('/foro')
             )}
           </div>
 
-          <h1 className="font-serif text-3xl mb-3">{post.title}</h1>
+          <h1 className="font-serif text-3xl mb-3">{post!.title}</h1>
           <div className="flex items-center gap-3 mb-6">
             {author?.avatar_url ? (
               <img src={author.avatar_url} alt="" className="w-6 h-6 rounded-full object-cover" />
@@ -209,13 +154,10 @@ if (!post) redirect('/foro')
                 <span className="text-[10px] text-accent">{author?.full_name?.charAt(0) || '?'}</span>
               </div>
             )}
-            <p className="text-xs text-muted">
-              {getDisplayName(author)} · {formatDate(post.created_at)}
-            </p>
+            <p className="text-xs text-muted">{getDisplayName(author)} · {formatDate(post!.created_at)}</p>
           </div>
-
           <div className="bg-surface border border-white/[0.07] rounded-2xl p-6">
-            <p className="text-sm text-white/80 leading-relaxed whitespace-pre-wrap">{post.content}</p>
+            <p className="text-sm text-white/80 leading-relaxed whitespace-pre-wrap">{post!.content}</p>
           </div>
         </div>
 
@@ -224,13 +166,11 @@ if (!post) redirect('/foro')
           <h2 className="font-serif text-2xl mb-5">
             {comments?.length || 0} {comments?.length === 1 ? 'respuesta' : 'respuestas'}
           </h2>
-
           {!comments?.length && (
             <div className="bg-surface border border-white/[0.07] rounded-2xl p-8 text-center mb-6">
               <p className="text-muted text-sm">Todavía no hay respuestas. ¡Sé el primero!</p>
             </div>
           )}
-
           <div className="flex flex-col gap-4">
             {comments?.map((comment) => {
               const commentAuthor = commentProfiles?.find((p) => p.id === comment.user_id)
@@ -245,16 +185,13 @@ if (!post) redirect('/foro')
                           <span className="text-[10px] text-accent">{commentAuthor?.full_name?.charAt(0) || '?'}</span>
                         </div>
                       )}
-                      <p className="text-xs text-muted">
-                        {getDisplayName(commentAuthor ?? null)} · {formatDate(comment.created_at)}
-                      </p>
+                      <p className="text-xs text-muted">{getDisplayName(commentAuthor ?? null)} · {formatDate(comment.created_at)}</p>
                     </div>
                     {isAdmin && (
                       <form action={deleteComment.bind(null, comment.id)}>
                         <button type="submit" className="text-xs text-muted hover:text-red-400 transition-colors">
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <polyline points="3 6 5 6 21 6"/>
-                            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                            <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
                           </svg>
                         </button>
                       </form>
@@ -278,9 +215,7 @@ if (!post) redirect('/foro')
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <Link href="/registro" className="bg-accent text-bg text-sm font-medium px-5 py-2.5 rounded-full hover:opacity-90 transition-opacity">
-                Registrate gratis
-              </Link>
+              <Link href="/registro" className="bg-accent text-bg text-sm font-medium px-5 py-2.5 rounded-full hover:opacity-90 transition-opacity">Registrate gratis</Link>
               <Link href="/login" className="text-sm text-muted hover:text-white transition-colors">Ya tengo cuenta</Link>
             </div>
           </div>
@@ -298,7 +233,7 @@ if (!post) redirect('/foro')
             </Link>
           </div>
         ) : (
-          <CommentForm postId={post.id} userId={user.id} />
+          <CommentForm postId={post!.id} userId={user.id} />
         )}
       </div>
     </div>
