@@ -212,20 +212,19 @@ export default function PlaylistsSection() {
 
         {/* CTA */}
         <div className="bg-bg border border-white/[0.07] rounded-2xl p-5 flex items-center justify-between gap-4 flex-wrap">
-          <div>
-            <p className="font-medium text-sm">¿Querés escuchar todos los temas?</p>
-            <p className="text-xs text-muted mt-0.5">
-              Registrate gratis y accedé a la biblioteca completa de pistas binaurales, con nuevas playlists cada mes.
-            </p>
-          <a
-            href="/registro"
-            className="text-sm font-medium px-5 py-3 rounded-full bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent/70 transition-all"
-          >
-            Registrarse gratis
-          </a>
-            </p>
-          </div>
-        </div>
+  <div>
+    <p className="font-medium text-sm">¿Querés escuchar todos los temas?</p>
+    <p className="text-xs text-muted mt-0.5">
+      Registrate gratis y accedé a la biblioteca completa de pistas binaurales, con nuevas playlists cada mes.
+    </p>
+  </div>
+  
+    <a href="/registro"
+    className="flex-shrink-0 text-sm font-medium px-5 py-2.5 rounded-full bg-accent text-bg hover:opacity-90 transition-opacity"
+  >
+    Registrarse gratis
+  </a>
+</div>
           
 
         <p className="text-xs text-muted text-center mt-4">
