@@ -63,19 +63,21 @@ export default async function DashboardPage() {
             <span className="text-xs text-muted">🎧 Solo auriculares</span>
         </div>
         <DashboardPlayer isPro={true} />
-        <div className="mt-4 bg-surface border border-white/[0.07] rounded-xl p-4 flex items-center justify-between gap-4 flex-wrap">
+        {/* TODO: Activar cuando tengamos Spotify y YouTube
+            <div className="mt-4 bg-surface border border-white/[0.07] rounded-xl p-4 flex items-center justify-between gap-4 flex-wrap">
             <p className="text-xs text-muted leading-relaxed">
-            Seguinos en Spotify y YouTube para acceder a la biblioteca completa
+                Seguinos en Spotify y YouTube (Proximamente disponible) y enterarte de las últimas novedades.
             </p>
             <div className="flex items-center gap-2 flex-shrink-0">
-            <a href="#" target="_blank" className="text-xs font-medium px-4 py-2 rounded-full hover:opacity-90 transition-opacity" style={{ background: '#1DB954', color: '#000' }}>
+                <a href="#" target="_blank" className="text-xs font-medium px-4 py-2 rounded-full hover:opacity-90 transition-opacity" style={{ background: '#1DB954', color: '#000' }}>
                 Spotify
-            </a>
-            <a href="#" target="_blank" className="text-xs font-medium px-4 py-2 rounded-full hover:opacity-90 transition-opacity" style={{ background: '#FF0000', color: '#fff' }}>
+                </a>
+                <a href="#" target="_blank" className="text-xs font-medium px-4 py-2 rounded-full hover:opacity-90 transition-opacity" style={{ background: '#FF0000', color: '#fff' }}>
                 YouTube
-            </a>
+                </a>
             </div>
-        </div>
+            </div>
+        */}
         </div>
       </div>
     </div>
