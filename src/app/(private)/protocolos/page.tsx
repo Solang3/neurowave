@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
+import Navbar from '@/components/layout/Navbar'
 import ProtocolosPlayer from './ProtocolosPlayer'
 
 export default async function ProtocolosPage() {
@@ -8,7 +9,7 @@ export default async function ProtocolosPage() {
 
   const { data: profile } = user ? await supabase
     .from('profiles')
-    .select('full_name, username, avatar_url')
+    .select('full_name, username, avatar_url, role')
     .eq('id', user.id)
     .maybeSingle() : { data: null }
 
@@ -18,44 +19,18 @@ export default async function ProtocolosPage() {
     .eq('published', true)
     .order('created_at', { ascending: true })
 
+  const navUser = user ? {
+    email: user.email!,
+    fullName: profile?.full_name,
+    username: profile?.username,
+    avatarUrl: profile?.avatar_url,
+    role: profile?.role,
+  } : null
+
   return (
     <div className="min-h-screen bg-bg">
       {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.07] bg-bg/95 backdrop-blur-xl px-6 md:px-12 py-4 flex items-center justify-between">
-        <Link href="/" className="font-serif text-xl">
-          Neuro<span className="text-accent">Wave</span>
-        </Link>
-        <ul className="hidden md:flex gap-8 list-none">
-          <li><Link href="/#ondas" className="text-sm text-muted hover:text-white transition-colors">Las ondas</Link></li>
-          <li><Link href="/#ciencia" className="text-sm text-muted hover:text-white transition-colors">Ciencia</Link></li>
-          <li><Link href="/protocolos" className="text-sm text-white">Protocolos</Link></li>
-          <li><Link href="/foro" className="text-sm text-muted hover:text-white transition-colors">Foro</Link></li>
-        </ul>
-        <div className="flex items-center gap-4">
-          {user ? (
-            <>
-              <Link href="/dashboard" className="text-sm text-muted hover:text-white transition-colors hidden md:block">
-                Mi biblioteca
-              </Link>
-              <Link href="/perfil" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                {profile?.avatar_url ? (
-                  <img src={profile.avatar_url} alt="Avatar" className="w-8 h-8 rounded-full object-cover border border-white/10" />
-                ) : (
-                  <div className="w-8 h-8 rounded-full bg-accent/20 border border-accent/30 flex items-center justify-center">
-                    <span className="text-xs font-medium text-accent">
-                      {profile?.full_name?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase()}
-                    </span>
-                  </div>
-                )}
-              </Link>
-            </>
-          ) : (
-            <Link href="/login" className="text-sm text-muted hover:text-white transition-colors">
-              Iniciar sesión
-            </Link>
-          )}
-        </div>
-      </nav>
+      <Navbar user={navUser} />
 
       <div className="max-w-4xl mx-auto px-6 md:px-8 pt-24 pb-12">
         {/* Header */}
