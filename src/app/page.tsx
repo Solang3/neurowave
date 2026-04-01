@@ -28,7 +28,7 @@ export default async function Home() {
     <>
       <Navbar user={navUser} />
       <main>
-        <Hero />
+        <Hero isLoggedIn={!!user} />
         <WavesSection />
         <DoctorSection />
         <PlaylistsSection />
