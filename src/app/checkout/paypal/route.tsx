@@ -4,8 +4,8 @@ import { createClient } from '@/lib/supabase/server'
 const PAYPAL_API = process.env.PAYPAL_API_URL || 'https://api-m.sandbox.paypal.com'
 
 const PLANS = {
-  monthly: { price: '9.00', cycles: 0, interval: 'MONTH', label: 'NeuroWave Pro Monthly' },
-  yearly:  { price: '79.00', cycles: 0, interval: 'YEAR', label: 'NeuroWave Pro Yearly' },
+  monthly: { price: '9.00', cycles: 0, interval: 'MONTH', label: 'BinaWave Pro Monthly' },
+  yearly:  { price: '79.00', cycles: 0, interval: 'YEAR', label: 'BinaWave Pro Yearly' },
 }
 
 async function getAccessToken() {

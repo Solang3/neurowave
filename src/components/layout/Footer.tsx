@@ -3,10 +3,10 @@ export default function Footer() {
     <>
       <footer className="border-t border-white/[0.07] px-12 py-8 flex items-center justify-between">
         <div className="font-serif text-xl">
-          Neuro<span className="text-accent">Wave</span>
+          Bina<span className="text-accent">Wave</span>
         </div>
         <p className="text-xs text-muted">
-          © 2025 NeuroWave · Información científica y experiencia personal · No reemplaza la consulta médica
+          © 2025 BinaWave · Información científica y experiencia personal · No reemplaza la consulta médica
         </p>
       </footer>
 

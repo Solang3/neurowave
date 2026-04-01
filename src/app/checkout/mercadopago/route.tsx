@@ -8,13 +8,13 @@ const mp = new MercadoPagoConfig({
 
 const PLANS = {
   monthly: {
-    reason: 'NeuroWave Pro — Mensual',
+    reason: 'BinaWave Pro — Mensual',
     frequency: 1,
     frequency_type: 'months',
     transaction_amount: 4999,
   },
   yearly: {
-    reason: 'NeuroWave Pro — Anual',
+    reason: 'BinaWave Pro — Anual',
     frequency: 12,
     frequency_type: 'months',
     transaction_amount: 41990,

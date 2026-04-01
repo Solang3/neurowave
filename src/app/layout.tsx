@@ -16,12 +16,12 @@ const dmSans = DM_Sans({
 })
 
 export const metadata: Metadata = {
-  title: 'NeuroWave — Ciencia del sonido para tu mente',
+  title: 'BinaWave — Ciencia del sonido para tu mente',
   description:
     'Ondas binaurales curadas por el Dr. Rogelio González, Médico Clínico Cirujano con más de 40 años de trayectoria. Respaldadas por bibliografía científica.',
   keywords: ['ondas binaurales', 'binaural beats', 'sueño', 'ansiedad', 'meditación', 'neurociencia'],
   openGraph: {
-    title: 'NeuroWave',
+    title: 'BinaWave',
     description: 'Ciencia del sonido para tu mente',
     type: 'website',
   },

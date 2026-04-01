@@ -42,7 +42,7 @@ export default function LoginPage() {
     <div className="min-h-screen bg-bg flex flex-col items-center justify-center px-4">
       {/* Logo */}
       <Link href="/" className="font-serif text-2xl mb-10">
-        Neuro<span className="text-accent">Wave</span>
+        Bina<span className="text-accent">Wave</span>
       </Link>
 
       <div className="w-full max-w-sm">

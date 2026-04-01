@@ -55,7 +55,7 @@ export default function RegistroPage() {
     return (
       <div className="min-h-screen bg-bg flex flex-col items-center justify-center px-4">
         <Link href="/" className="font-serif text-2xl mb-10">
-          Neuro<span className="text-accent">Wave</span>
+          Bina<span className="text-accent">Wave</span>
         </Link>
         <div className="w-full max-w-sm text-center">
           <div className="w-16 h-16 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center mx-auto mb-6 text-2xl">
@@ -77,7 +77,7 @@ export default function RegistroPage() {
   return (
     <div className="min-h-screen bg-bg flex flex-col items-center justify-center px-4">
       <Link href="/" className="font-serif text-2xl mb-10">
-        Neuro<span className="text-accent">Wave</span>
+        Bina<span className="text-accent">Wave</span>
       </Link>
 
       <div className="w-full max-w-sm">

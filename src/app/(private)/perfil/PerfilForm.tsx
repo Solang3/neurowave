@@ -113,7 +113,7 @@ export default function PerfilForm({ user, profile }: { user: User; profile: Pro
     <div className="min-h-screen bg-bg">
       <nav className="border-b border-white/[0.07] px-6 md:px-12 py-4 flex items-center justify-between">
         <Link href="/" className="font-serif text-xl">
-          Neuro<span className="text-accent">Wave</span>
+          Bina<span className="text-accent">Wave</span>
         </Link>
         <div className="flex items-center gap-4">
           <Link href="/foro" className="text-sm text-muted hover:text-white transition-colors">Foro</Link>

@@ -54,7 +54,7 @@ export default function Navbar({ user }: NavbarProps) {
         scrolled || open ? 'bg-bg/95 backdrop-blur-xl border-b border-white/[0.07]' : 'bg-transparent'
       }`}>
         <Link href="/" className="font-serif text-xl tracking-tight z-50" onClick={() => setOpen(false)}>
-          Neuro<span className="text-accent">Wave</span>
+          Bina<span className="text-accent">Wave</span>
         </Link>
 
         {/* Desktop links */}

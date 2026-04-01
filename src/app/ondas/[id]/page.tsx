@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const wave = WAVES_SCIENCE.find((w) => w.id === id)
   if (!wave) return {}
   return {
-    title: `Ondas ${wave.name} (${wave.freqRange}) — NeuroWave`,
+    title: `Ondas ${wave.name} (${wave.freqRange}) — BinaWave`,
     description: wave.tagline,
   }
 }
@@ -32,7 +32,7 @@ export default async function WavePage({ params }: { params: Promise<{ id: strin
       {/* Nav */}
       <nav className="border-b border-white/[0.07] px-8 py-4 flex items-center justify-between">
         <Link href="/" className="font-serif text-xl">
-          Neuro<span className="text-accent">Wave</span>
+          Bina<span className="text-accent">Wave</span>
         </Link>
         <div className="flex items-center gap-6">
           <Link href="/" className="text-sm text-muted hover:text-white transition-colors">
