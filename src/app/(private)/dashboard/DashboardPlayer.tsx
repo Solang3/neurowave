@@ -85,7 +85,7 @@ export default function DashboardPlayer({ isPro = false }: { isPro?: boolean }) 
   useEffect(() => { queueRef.current = queue }, [queue])
   useEffect(() => { queueIndexRef.current = queueIndex }, [queueIndex])
 
-  const PREVIEW_SECONDS = isPro ? Infinity : 20
+  const PREVIEW_SECONDS = isPro ? Infinity : 40
 
   useEffect(() => {
     return () => {
@@ -316,11 +316,11 @@ export default function DashboardPlayer({ isPro = false }: { isPro?: boolean }) 
               <p className="font-medium text-sm truncate">{currentItem.track.title}</p>
               <p className="font-medium text-sm truncate">{currentItem.group.wave} · {currentItem.track.genre}</p>
               <p className="text-xs mt-0.5" style={{ color: currentItem.group.color }}>
-                {currentItem.group.binauralHz} Hz binaural · {isPro ? 'completa' : 'muestra 20s'}
+                {currentItem.group.binauralHz} Hz binaural · {isPro ? 'completa' : 'muestra 40s'}
               </p>
             </div>
             <span className="text-xs text-muted font-mono text-right">
-              {formatTime(elapsed)}{isPro ? ` / ${formatTime(duration)}` : ' / 0:20'}
+              {formatTime(elapsed)}{isPro ? ` / ${formatTime(duration)}` : ' / 0:40'}
             </span>
           </div>
 
@@ -518,7 +518,7 @@ export default function DashboardPlayer({ isPro = false }: { isPro?: boolean }) 
                     <p className="font-medium text-sm">{track.title}</p>
                     <p className="font-medium text-sm">{currentGroup.wave} · {track.genre}</p>
                     <p className="text-xs mt-0.5" style={{ color: currentGroup.color }}>
-                      {currentGroup.binauralHz} Hz binaural · {isPro ? 'completa' : 'muestra 20s'}
+                      {currentGroup.binauralHz} Hz binaural · {isPro ? 'completa' : 'muestra 40s'}
                     </p>
                   </div>
 

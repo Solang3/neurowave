@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 
 const links = [
@@ -25,6 +25,7 @@ export default function Navbar({ user }: NavbarProps) {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
@@ -38,11 +39,14 @@ export default function Navbar({ user }: NavbarProps) {
   }, [open])
 
   useEffect(() => {
-    if (!dropdownOpen) return
-    const close = () => setDropdownOpen(false)
-    document.addEventListener('mousedown', close)
-    return () => document.removeEventListener('mousedown', close)
-  }, [dropdownOpen])
+    function handleClick(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
 
   function closeAndScroll(href: string) {
     setOpen(false)
@@ -80,7 +84,7 @@ export default function Navbar({ user }: NavbarProps) {
         {/* Desktop CTAs */}
         <div className="hidden md:flex items-center gap-3">
           {user ? (
-            <div className="relative" onMouseDown={(e) => e.stopPropagation()}>
+            <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 className="flex items-center gap-2.5 hover:opacity-80 transition-opacity"

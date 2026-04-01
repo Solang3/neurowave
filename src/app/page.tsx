@@ -63,18 +63,23 @@ export default async function Home() {
             <WavesPanel />
           </section>
 
-          {/* Biblioteca de audio */}
-          <section className="max-w-4xl mx-auto px-6 md:px-8 pb-16">
-            <div className="flex items-center justify-between mb-5">
-              <h2 className="font-serif text-2xl">Biblioteca de ondas</h2>
-              <span className="text-xs text-muted">🎧 Solo auriculares</span>
+          {/* Biblioteca de ondas — anchor #playlists */}
+          <section id="playlists" className="bg-surface border-t border-white/[0.07] py-16 md:py-24">
+            <div className="max-w-5xl mx-auto px-4 md:px-12">
+              <p className="text-xs tracking-widest uppercase text-accent mb-4">Biblioteca completa</p>
+              <h2 className="font-serif text-4xl md:text-5xl leading-tight tracking-tight mb-4">
+                Una lista para<br />
+                <em className="text-accent">cada necesidad</em>
+              </h2>
+              <p className="text-muted max-w-lg mb-10">
+                Seleccionadas por el Dr. González. Acceso completo a todas las pistas.
+              </p>
+              <DashboardPlayer isPro={true} />
             </div>
-            <DashboardPlayer isPro={true} />
           </section>
 
-          {/* Secciones informativas — anchors #ciencia y #playlists */}
+          {/* Sección científica — anchor #ciencia */}
           <DoctorSection />
-          <PlaylistsSection isLoggedIn={true} />
         </main>
         <Footer />
       </>

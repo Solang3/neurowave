@@ -53,6 +53,7 @@ const WAVE_GROUPS = [
 ]
 
 const PREVIEW_SECONDS = 40
+const MAX_PREVIEW_TRACKS = 3
 
 export default function PlaylistsSection({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
   const [openWave, setOpenWave] = useState('Delta')
@@ -120,7 +121,7 @@ export default function PlaylistsSection({ isLoggedIn = false }: { isLoggedIn?: 
           <em className="text-accent">cada necesidad</em>
         </h2>
         <p className="text-muted max-w-lg mb-10">
-          Seleccionadas por el Dr. González. Escuchá 20 segundos gratis — sin registro.
+          Seleccionadas por el Dr. González. Escuchá 40 segundos gratis — sin registro.
         </p>
 
         {/* Tabs de ondas */}
@@ -149,7 +150,7 @@ export default function PlaylistsSection({ isLoggedIn = false }: { isLoggedIn?: 
 
         {/* Tracks */}
         <div className="flex flex-col gap-3 mb-6">
-          {currentGroup.tracks.map((track) => {
+          {currentGroup.tracks.slice(0, MAX_PREVIEW_TRACKS).map((track) => {
             const isPlaying = playingId === track.id
             const prog = progress[track.id] ?? 0
             const elapsedSecs = elapsed[track.id] ?? 0
@@ -171,7 +172,7 @@ export default function PlaylistsSection({ isLoggedIn = false }: { isLoggedIn?: 
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-sm">{currentGroup.wave} · {track.genre}</p>
                     <p className="text-xs mt-0.5" style={{ color: currentGroup.color }}>
-                      {currentGroup.wave} · {currentGroup.binauralHz} Hz binaural · muestra 20s
+                      {currentGroup.wave} · {currentGroup.binauralHz} Hz binaural · muestra 40s
                     </p>
                     <div className="mt-2 h-0.5 bg-white/10 rounded-full overflow-hidden">
                       <div
