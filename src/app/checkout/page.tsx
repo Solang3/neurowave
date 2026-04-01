@@ -156,7 +156,7 @@ function CheckoutContent() {
         </p>
 
         <div className="flex items-center justify-center mt-4">
-          <Link href="/dashboard" className="text-xs text-muted hover:text-white transition-colors">
+          <Link href="/" className="text-xs text-muted hover:text-white transition-colors">
             ← Volver al Mi biblioteca
           </Link>
         </div>

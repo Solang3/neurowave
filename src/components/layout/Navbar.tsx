@@ -179,7 +179,7 @@ export default function Navbar({ user }: NavbarProps) {
             style={{ transitionDelay: open ? '280ms' : '0ms' }}>
             {user ? (
               <>
-                <Link href="/dashboard" onClick={() => setOpen(false)}
+                <Link href="/" onClick={() => setOpen(false)}
                   className="block w-full bg-accent text-bg text-center font-medium py-3.5 rounded-full hover:opacity-90 transition-opacity">
                   Mi biblioteca
                 </Link>

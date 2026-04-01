@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
         plan_id: paypalPlan.id,
         custom_id: user.id,
         application_context: {
-          return_url: `${appUrl}/dashboard?payment=success`,
+          return_url: `${appUrl}/?payment=success`,
           cancel_url: `${appUrl}/checkout?plan=${plan}`,
         },
       }),

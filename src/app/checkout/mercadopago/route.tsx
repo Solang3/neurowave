@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
           currency_id: 'ARS',
         },
         payer_email: user.email!,
-        back_url: `${appUrl}/dashboard?payment=success`,
+        back_url: `${appUrl}/?payment=success`,
         external_reference: user.id,
         status: 'pending',
       },

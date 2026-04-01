@@ -100,7 +100,7 @@ export default function Hero({ isLoggedIn }: HeroProps) {
         <div className="flex gap-4">
           {isLoggedIn ? (
             <Link
-              href="/dashboard"
+              href="/"
               className="bg-accent text-bg font-medium px-8 py-3.5 rounded-full hover:-translate-y-0.5 hover:opacity-90 transition-all"
             >
               Ir a mi biblioteca

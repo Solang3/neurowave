@@ -35,7 +35,7 @@ export default async function WavePage({ params }: { params: Promise<{ id: strin
           Neuro<span className="text-accent">Wave</span>
         </Link>
         <div className="flex items-center gap-6">
-          <Link href="/dashboard" className="text-sm text-muted hover:text-white transition-colors">
+          <Link href="/" className="text-sm text-muted hover:text-white transition-colors">
             ← Mi biblioteca
           </Link>
           <Link href="/#ondas" className="text-sm text-muted hover:text-white transition-colors">

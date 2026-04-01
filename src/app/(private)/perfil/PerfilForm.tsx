@@ -117,7 +117,7 @@ export default function PerfilForm({ user, profile }: { user: User; profile: Pro
         </Link>
         <div className="flex items-center gap-4">
           <Link href="/foro" className="text-sm text-muted hover:text-white transition-colors">Foro</Link>
-          <Link href="/dashboard" className="text-sm text-muted hover:text-white transition-colors">Mi biblioteca</Link>
+          <Link href="/" className="text-sm text-muted hover:text-white transition-colors">Mi biblioteca</Link>
         </div>
       </nav>
 
