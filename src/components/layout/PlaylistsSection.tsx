@@ -54,7 +54,7 @@ const WAVE_GROUPS = [
 
 const PREVIEW_SECONDS = 40
 
-export default function PlaylistsSection() {
+export default function PlaylistsSection({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
   const [openWave, setOpenWave] = useState('Delta')
   const [playingId, setPlayingId] = useState<string | null>(null)
   const [progress, setProgress] = useState<Record<string, number>>({})
@@ -211,20 +211,19 @@ export default function PlaylistsSection() {
         </div>
 
         {/* CTA */}
-        <div className="bg-bg border border-white/[0.07] rounded-2xl p-5 flex items-center justify-between gap-4 flex-wrap">
-  <div>
-    <p className="font-medium text-sm">¿Querés escuchar todos los temas?</p>
-    <p className="text-xs text-muted mt-0.5">
-      Registrate gratis y accedé a la biblioteca completa de pistas binaurales, con nuevas playlists cada mes.
-    </p>
-  </div>
-  
-    <a href="/registro"
-    className="flex-shrink-0 text-sm font-medium px-5 py-2.5 rounded-full bg-accent text-bg hover:opacity-90 transition-opacity"
-  >
-    Registrarse gratis
-  </a>
-</div>
+        {!isLoggedIn && (
+          <div className="bg-bg border border-white/[0.07] rounded-2xl p-5 flex items-center justify-between gap-4 flex-wrap">
+            <div>
+              <p className="font-medium text-sm">¿Querés escuchar todos los temas?</p>
+              <p className="text-xs text-muted mt-0.5">
+                Registrate gratis y accedé a la biblioteca completa de pistas binaurales, con nuevas playlists cada mes.
+              </p>
+            </div>
+            <a href="/registro" className="flex-shrink-0 text-sm font-medium px-5 py-2.5 rounded-full bg-accent text-bg hover:opacity-90 transition-opacity">
+              Registrarse gratis
+            </a>
+          </div>
+        )}
           
 
         <p className="text-xs text-muted text-center mt-4">
